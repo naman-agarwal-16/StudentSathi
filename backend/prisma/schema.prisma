@@ -1,0 +1,187 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id               String   @id @default(uuid())
+  name             String   @db.VarChar(100)
+  email            String   @unique @db.VarChar(255)
+  studentId        String   @unique @db.VarChar(50)
+  enrollmentDate   DateTime @default(now())
+  grade            String?  @db.VarChar(20)
+  section          String?  @db.VarChar(20)
+  engagementScore  Float    @default(0) @db.DoublePrecision
+  attendanceRate   Float    @default(0) @db.DoublePrecision
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  alerts           Alert[]
+  analytics        Analytics[]
+  attendanceRecords AttendanceRecord[]
+  performanceRecords PerformanceRecord[]
+
+  @@index([email])
+  @@index([studentId])
+  @@index([engagementScore])
+  @@map("students")
+}
+
+model Alert {
+  id          String   @id @default(uuid())
+  studentId   String
+  type        AlertType
+  severity    AlertSeverity
+  message     String   @db.Text
+  status      AlertStatus @default(ACTIVE)
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+  @@map("alerts")
+}
+
+model Analytics {
+  id          String   @id @default(uuid())
+  studentId   String
+  metric      String   @db.VarChar(50)
+  value       Float    @db.DoublePrecision
+  trend       TrendType
+  timestamp   DateTime @default(now())
+  metadata    Json?
+
+  // Relations
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([metric])
+  @@index([timestamp])
+  @@map("analytics")
+}
+
+model AttendanceRecord {
+  id          String   @id @default(uuid())
+  studentId   String
+  date        DateTime
+  status      AttendanceStatus
+  notes       String?  @db.Text
+  createdAt   DateTime @default(now())
+
+  // Relations
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, date])
+  @@index([studentId])
+  @@index([date])
+  @@map("attendance_records")
+}
+
+model PerformanceRecord {
+  id          String   @id @default(uuid())
+  studentId   String
+  subject     String   @db.VarChar(100)
+  score       Float    @db.DoublePrecision
+  maxScore    Float    @db.DoublePrecision
+  date        DateTime
+  type        String   @db.VarChar(50) // quiz, test, assignment, exam
+  notes       String?  @db.Text
+  createdAt   DateTime @default(now())
+
+  // Relations
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([subject])
+  @@index([date])
+  @@map("performance_records")
+}
+
+model LMSIntegration {
+  id          String   @id @default(uuid())
+  platform    LMSPlatform
+  apiKey      String   @db.Text
+  baseUrl     String   @db.VarChar(500)
+  enabled     Boolean  @default(true)
+  lastSyncAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([platform])
+  @@map("lms_integrations")
+}
+
+model WebhookConfig {
+  id          String   @id @default(uuid())
+  name        String   @db.VarChar(100)
+  url         String   @db.VarChar(500)
+  event       WebhookEvent
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([event])
+  @@map("webhook_configs")
+}
+
+// Enums
+enum AlertType {
+  ENGAGEMENT_DROP
+  ATTENDANCE_LOW
+  GRADE_DROP
+  BEHAVIORAL
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertStatus {
+  ACTIVE
+  ACKNOWLEDGED
+  RESOLVED
+}
+
+enum TrendType {
+  UP
+  DOWN
+  STABLE
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+enum LMSPlatform {
+  GOOGLE_CLASSROOM
+  CANVAS
+  MOODLE
+  TEAMS
+}
+
+enum WebhookEvent {
+  ENGAGEMENT_ALERT
+  ATTENDANCE_LOW
+  GRADE_DROP
+  WEEKLY_REPORT
+}
