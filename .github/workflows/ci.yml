@@ -1,0 +1,159 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, copilot/** ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Backend tests and linting
+  backend-test:
+    name: Backend Tests & Lint
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: studentsathi_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+      
+      - name: Lint backend code
+        working-directory: ./backend
+        run: npm run lint || true
+      
+      - name: Generate Prisma Client
+        working-directory: ./backend
+        run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/studentsathi_test
+      
+      - name: Run Prisma migrations
+        working-directory: ./backend
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/studentsathi_test
+      
+      - name: Run backend tests
+        working-directory: ./backend
+        run: npm test -- --coverage
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/studentsathi_test
+          NODE_ENV: test
+      
+      - name: Upload backend coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./backend/coverage/coverage-final.json
+          flags: backend
+          name: backend-coverage
+
+  # Frontend tests and linting
+  frontend-test:
+    name: Frontend Tests & Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install root dependencies
+        run: npm ci
+      
+      - name: Lint frontend code
+        run: npm run lint
+      
+      - name: Build frontend
+        run: npm run build
+        env:
+          CI: true
+      
+      # Uncomment when tests are ready
+      # - name: Run frontend tests
+      #   run: npm test -- --coverage
+      #   env:
+      #     CI: true
+      
+      # - name: Upload frontend coverage
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     files: ./coverage/coverage-final.json
+      #     flags: frontend
+      #     name: frontend-coverage
+
+  # Security audit
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Audit backend dependencies
+        working-directory: ./backend
+        run: npm audit --audit-level=moderate || true
+      
+      - name: Audit frontend dependencies
+        run: npm audit --audit-level=moderate || true
+
+  # Build check
+  build-check:
+    name: Build Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+      
+      - name: Build backend
+        working-directory: ./backend
+        run: npm run build
+      
+      - name: Install frontend dependencies
+        run: npm ci
+      
+      - name: Build frontend
+        run: npm run build
+        env:
+          CI: true

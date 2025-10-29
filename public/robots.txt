@@ -10,5 +10,18 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+# robots.txt for StudentSathi
+# This file tells search engines how to crawl our site
+
+# Allow all crawlers
 User-agent: *
 Allow: /
+
+# Disallow admin and API endpoints
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /backend/
+
+# Sitemap location
+Sitemap: https://studentsathi.com/sitemap.xml
