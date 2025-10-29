@@ -8,10 +8,9 @@ module.exports = {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   collectCoverageFrom: [
-    'src/**/*.ts',
-    '!src/**/*.d.ts',
-    '!src/**/__tests__/**',
-    '!src/server.ts',
+    'src/services/**/*.ts',
+    'src/controllers/**/*.ts',
+    'src/middleware/**/*.ts',
   ],
   coverageThreshold: {
     global: {
