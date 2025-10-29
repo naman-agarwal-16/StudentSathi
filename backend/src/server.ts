@@ -53,7 +53,7 @@ class Server {
     this.app.use('/api/', limiter);
 
     // Request logging
-    this.app.use((req, res, next) => {
+    this.app.use((req, _res, next) => {
       logger.info(`${req.method} ${req.path}`, {
         ip: req.ip,
         userAgent: req.get('user-agent'),
@@ -64,7 +64,7 @@ class Server {
 
   private configureRoutes(): void {
     // Health check
-    this.app.get('/health', async (req: Request, res: Response) => {
+    this.app.get('/health', async (_req: Request, res: Response) => {
       const dbHealthy = await this.dbService.healthCheck();
       res.status(dbHealthy ? 200 : 503).json({
         status: dbHealthy ? 'healthy' : 'unhealthy',
@@ -82,7 +82,7 @@ class Server {
     this.app.use('/api/students', createStudentRouter(studentController));
 
     // Root route
-    this.app.get('/', (req: Request, res: Response) => {
+    this.app.get('/', (_req: Request, res: Response) => {
       res.json({
         message: 'StudentSathi API',
         version: '1.0.0',

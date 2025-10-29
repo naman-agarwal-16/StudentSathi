@@ -14,9 +14,9 @@ export class AppError extends Error {
 }
 
 export const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>
 ) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 };
@@ -48,7 +48,8 @@ export const validateRequest = (schema: ZodSchema) => {
             message: err.message,
           })),
         };
-        return res.status(400).json(errorResponse);
+        res.status(400).json(errorResponse);
+        return;
       }
       next(error);
     }
@@ -59,7 +60,7 @@ export const errorHandler = (
   err: Error | AppError,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   if (err instanceof AppError) {
     const errorResponse: ErrorResponseDto = {
@@ -69,7 +70,8 @@ export const errorHandler = (
       timestamp: new Date().toISOString(),
       path: req.path,
     };
-    return res.status(err.statusCode).json(errorResponse);
+    res.status(err.statusCode).json(errorResponse);
+    return;
   }
 
   // Log unexpected errors

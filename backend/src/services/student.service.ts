@@ -1,4 +1,4 @@
-import { PrismaClient, Student, Prisma } from '@prisma/client';
+import { PrismaClient, Student } from '@prisma/client';
 import { CreateStudentDto, UpdateStudentDto, StudentResponseDto, PaginationQueryDto } from '../types/dtos.js';
 import { AppError } from '../middleware/errorHandler.js';
 import logger from '../utils/logger.js';
