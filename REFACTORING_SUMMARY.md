@@ -1,5 +1,7 @@
 # StudentSathi - Complete Full-Stack Refactoring
 
+[![CI/CD Pipeline](https://github.com/Agent05-code/StudentSathi/actions/workflows/ci.yml/badge.svg?branch=copilot/refactor-backend-and-frontend)](https://github.com/Agent05-code/StudentSathi/actions/workflows/ci.yml)
+
 ## 🎯 Project Overview
 
 StudentSathi is a comprehensive AI-powered student engagement and performance analytics platform designed to help educators track, analyze, and improve student outcomes through data-driven insights.
