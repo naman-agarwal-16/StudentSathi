@@ -247,6 +247,7 @@ describe('StudentService', () => {
         updatedAt: new Date(),
       };
 
+      (mockPrismaClient.student.findUnique as jest.Mock).mockResolvedValue(mockStudent);
       (mockPrismaClient.student.update as jest.Mock).mockResolvedValue(mockStudent);
 
       const result = await studentService.updateEngagementScore('123', 85);
@@ -257,6 +258,77 @@ describe('StudentService', () => {
     it('should throw error if score is out of range', async () => {
       await expect(studentService.updateEngagementScore('123', 150)).rejects.toThrow(AppError);
       await expect(studentService.updateEngagementScore('123', -10)).rejects.toThrow(AppError);
+    });
+
+    it('should throw error if student not found', async () => {
+      (mockPrismaClient.student.findUnique as jest.Mock).mockResolvedValue(null);
+
+      await expect(studentService.updateEngagementScore('999', 85)).rejects.toThrow(AppError);
+      await expect(studentService.updateEngagementScore('999', 85)).rejects.toThrow('not found');
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('should handle database errors in createStudent', async () => {
+      (mockPrismaClient.student.findFirst as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+      await expect(studentService.createStudent({
+        name: 'John Doe',
+        email: 'john@example.com',
+        studentId: 'STU001',
+      })).rejects.toThrow(AppError);
+    });
+
+    it('should handle database errors in getAllStudents', async () => {
+      (mockPrismaClient.student.count as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+      await expect(studentService.getAllStudents({ page: 1, limit: 20 })).rejects.toThrow(AppError);
+    });
+
+    it('should handle database errors in updateStudent', async () => {
+      (mockPrismaClient.student.findUnique as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+      await expect(studentService.updateStudent('123', { name: 'Updated' })).rejects.toThrow(AppError);
+    });
+
+    it('should handle conflicts in updateStudent with email/studentId', async () => {
+      const existingStudent = {
+        id: '123',
+        name: 'John Doe',
+        email: 'john@example.com',
+        studentId: 'STU001',
+        enrollmentDate: new Date(),
+        grade: '10',
+        section: 'A',
+        engagementScore: 0,
+        attendanceRate: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const conflictingStudent = {
+        id: '456',
+        name: 'Jane Doe',
+        email: 'jane@example.com',
+        studentId: 'STU002',
+        enrollmentDate: new Date(),
+        grade: '10',
+        section: 'B',
+        engagementScore: 0,
+        attendanceRate: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      (mockPrismaClient.student.findUnique as jest.Mock).mockResolvedValue(existingStudent);
+      (mockPrismaClient.student.findFirst as jest.Mock).mockResolvedValue(conflictingStudent);
+
+      await expect(studentService.updateStudent('123', {
+        email: 'jane@example.com',
+      })).rejects.toThrow(AppError);
+      await expect(studentService.updateStudent('123', {
+        email: 'jane@example.com',
+      })).rejects.toThrow('already in use');
     });
   });
 });

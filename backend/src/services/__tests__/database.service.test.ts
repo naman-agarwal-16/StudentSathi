@@ -224,5 +224,20 @@ describe('DatabaseService', () => {
 
       expect(mockPrismaClient.$queryRaw).toHaveBeenCalledTimes(3);
     });
+
+    it('should handle disconnect errors', async () => {
+      const service = DatabaseService.getInstance();
+      const disconnectError = new Error('Disconnect failed');
+      (mockPrismaClient.$disconnect as jest.Mock).mockRejectedValue(disconnectError);
+
+      await expect(service.disconnect()).rejects.toThrow('Disconnect failed');
+    });
+
+    it('should return prisma client instance', () => {
+      const service = DatabaseService.getInstance();
+      const client = service.getClient();
+
+      expect(client).toBe(mockPrismaClient);
+    });
   });
 });
