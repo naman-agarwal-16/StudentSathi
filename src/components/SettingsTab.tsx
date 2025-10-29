@@ -33,7 +33,7 @@ export const SettingsTab = () => {
     exportFrequency: 'weekly'
   });
 
-  const handleSettingChange = (key: string, value: any) => {
+  const handleSettingChange = (key: string, value: string | boolean | number) => {
     setSettings(prev => ({ ...prev, [key]: value }));
   };
 

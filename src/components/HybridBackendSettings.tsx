@@ -469,7 +469,7 @@ export const HybridBackendSettings = () => {
                     <Label htmlFor="webhook-event">Trigger Event</Label>
                     <Select 
                       value={newWebhook.event} 
-                      onValueChange={(value: any) => setNewWebhook(prev => ({ ...prev, event: value }))}
+                      onValueChange={(value: string) => setNewWebhook(prev => ({ ...prev, event: value }))}
                     >
                       <SelectTrigger>
                         <SelectValue />
