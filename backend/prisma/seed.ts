@@ -170,7 +170,7 @@ async function main() {
               studentId: student.id,
               metric,
               value: Math.random() * 100,
-              trend: ['UP', 'DOWN', 'STABLE'][Math.floor(Math.random() * 3)] as any,
+              trend: ['UP', 'DOWN', 'STABLE'][Math.floor(Math.random() * 3)] as 'UP' | 'DOWN' | 'STABLE',
               timestamp,
             },
           })

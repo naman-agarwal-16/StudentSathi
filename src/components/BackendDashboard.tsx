@@ -195,7 +195,7 @@ export const BackendDashboard = () => {
                   {syncStatus.source === 'Zapier Webhooks' && <Zap className="w-5 h-5" />}
                   {syncStatus.source}
                 </CardTitle>
-                <Badge variant={getStatusColor(syncStatus.status) as any}>
+                <Badge variant={getStatusColor(syncStatus.status) as "default" | "secondary" | "destructive" | "outline"}>
                   {syncStatus.status}
                 </Badge>
               </div>

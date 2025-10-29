@@ -16,16 +16,16 @@ class DatabaseService {
 
     // Log queries in development
     if (process.env.NODE_ENV === 'development') {
-      this.prisma.$on('query' as never, (e: any) => {
+      this.prisma.$on('query' as never, (e: { query: string; duration: number }) => {
         logger.debug(`Query: ${e.query} - Duration: ${e.duration}ms`);
       });
     }
 
-    this.prisma.$on('error' as never, (e: any) => {
+    this.prisma.$on('error' as never, (e: Error) => {
       logger.error('Database error:', e);
     });
 
-    this.prisma.$on('warn' as never, (e: any) => {
+    this.prisma.$on('warn' as never, (e: { message: string }) => {
       logger.warn('Database warning:', e);
     });
   }

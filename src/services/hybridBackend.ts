@@ -82,7 +82,7 @@ export class LMSService {
 
 // Zapier Webhook Service
 export class ZapierService {
-  static async triggerWebhook(webhook: ZapierWebhook, data: any) {
+  static async triggerWebhook(webhook: ZapierWebhook, data: Record<string, unknown>) {
     if (!webhook.enabled || !webhook.url) return false;
 
     try {
@@ -107,7 +107,7 @@ export class ZapierService {
     }
   }
 
-  static async sendEngagementAlert(webhook: ZapierWebhook, studentData: any) {
+  static async sendEngagementAlert(webhook: ZapierWebhook, studentData: { name: string; engagementScore: number }) {
     return this.triggerWebhook(webhook, {
       studentName: studentData.name,
       engagementScore: studentData.engagementScore,
@@ -116,7 +116,7 @@ export class ZapierService {
     });
   }
 
-  static async sendWeeklyReport(webhook: ZapierWebhook, reportData: any) {
+  static async sendWeeklyReport(webhook: ZapierWebhook, reportData: { averageEngagement: number; atRiskCount: number; totalAlerts: number }) {
     return this.triggerWebhook(webhook, {
       reportType: 'weekly_summary',
       classAverage: reportData.averageEngagement,
@@ -168,7 +168,7 @@ export class HybridBackendManager {
     }));
   }
 
-  async triggerAlert(alertData: any) {
+  async triggerAlert(alertData: { name: string; engagementScore: number }) {
     const alertWebhooks = this.zapierWebhooks.filter(
       w => w.event === 'engagement_alert' && w.enabled
     );

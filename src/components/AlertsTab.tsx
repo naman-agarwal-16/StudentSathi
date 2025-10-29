@@ -181,7 +181,7 @@ export const AlertsTab = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <h3 className="font-semibold">{alert.studentName}</h3>
-                          <Badge variant={getSeverityColor(alert.severity) as any}>
+                          <Badge variant={getSeverityColor(alert.severity) as "default" | "secondary" | "destructive" | "outline"}>
                             {alert.severity} priority
                           </Badge>
                           <Badge variant="outline" className="text-xs">

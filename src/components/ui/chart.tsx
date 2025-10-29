@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 export const ChartContainer = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
-    config?: Record<string, any>;
+    config?: Record<string, { label?: string; color?: string }>;
     children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>["children"];
   }
 >(({ className, children, config, ...props }, ref) => {
@@ -37,7 +37,7 @@ interface TooltipContentProps {
     value: number | string
     name: string
     color: string
-    payload?: any
+    payload?: Record<string, unknown>
   }>
   label?: string
   className?: string
