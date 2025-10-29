@@ -152,6 +152,9 @@ export class StudentService {
         throw new AppError(400, 'Engagement score must be between 0 and 100');
       }
 
+      // Check if student exists
+      await this.getStudentById(id);
+
       const student = await this.prisma.student.update({
         where: { id },
         data: { engagementScore: score },
