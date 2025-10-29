@@ -37,10 +37,24 @@ function calculateContrastRatio(color1: string, color2: string): number {
 
 /**
  * Get relative luminance of a color
+ * Following WCAG 2.2 formula
  */
-function getRelativeLuminance(color: string): number {
-  // Simplified implementation - would need full RGB parsing in production
-  return 0.5
+function getRelativeLuminance(hexColor: string): number {
+  // Remove # if present
+  const hex = hexColor.replace('#', '')
+  
+  // Convert to RGB
+  const r = parseInt(hex.substring(0, 2), 16) / 255
+  const g = parseInt(hex.substring(2, 4), 16) / 255
+  const b = parseInt(hex.substring(4, 6), 16) / 255
+  
+  // Apply gamma correction
+  const rs = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4)
+  const gs = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4)
+  const bs = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4)
+  
+  // Calculate luminance
+  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs
 }
 
 /**
@@ -104,7 +118,9 @@ export function announceToScreenReader(message: string, priority: 'polite' | 'as
   document.body.appendChild(announcement)
   
   setTimeout(() => {
-    document.body.removeChild(announcement)
+    if (announcement.parentNode === document.body) {
+      document.body.removeChild(announcement)
+    }
   }, 1000)
 }
 
@@ -145,22 +161,27 @@ export const focusManagement = {
 
 /**
  * ARIA live region helpers
+ * Creates or updates a persistent live region for screen reader announcements
+ * Note: This is different from announceToScreenReader which creates temporary announcements
  */
-export function createLiveRegion(
+export function updateLiveRegion(
   message: string,
   type: 'status' | 'alert' = 'status'
 ): void {
-  const liveRegion = document.getElementById('aria-live-region')
+  let liveRegion = document.getElementById('aria-live-region')
+  
   if (liveRegion) {
     liveRegion.textContent = message
+    liveRegion.setAttribute('role', type)
+    liveRegion.setAttribute('aria-live', type === 'alert' ? 'assertive' : 'polite')
   } else {
-    const newRegion = document.createElement('div')
-    newRegion.id = 'aria-live-region'
-    newRegion.setAttribute('role', type)
-    newRegion.setAttribute('aria-live', type === 'alert' ? 'assertive' : 'polite')
-    newRegion.className = 'sr-only'
-    newRegion.textContent = message
-    document.body.appendChild(newRegion)
+    liveRegion = document.createElement('div')
+    liveRegion.id = 'aria-live-region'
+    liveRegion.setAttribute('role', type)
+    liveRegion.setAttribute('aria-live', type === 'alert' ? 'assertive' : 'polite')
+    liveRegion.className = 'sr-only'
+    liveRegion.textContent = message
+    document.body.appendChild(liveRegion)
   }
 }
 
