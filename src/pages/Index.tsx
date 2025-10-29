@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import { HeroSection } from '@/components/HeroSection';
 import { DashboardNav } from '@/components/DashboardNav';
 import { OverviewTab } from '@/components/OverviewTab';
@@ -11,8 +11,12 @@ const Index = () => {
   const [showDashboard, setShowDashboard] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
 
+  // Memoize callbacks to prevent unnecessary re-renders
+  const handleGetStarted = useCallback(() => setShowDashboard(true), []);
+  const handleTabChange = useCallback((tab: string) => setActiveTab(tab), []);
+
   if (!showDashboard) {
-    return <HeroSection onGetStarted={() => setShowDashboard(true)} />;
+    return <HeroSection onGetStarted={handleGetStarted} />;
   }
 
   const renderActiveTab = () => {
@@ -34,7 +38,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardNav activeTab={activeTab} onTabChange={setActiveTab} />
+      <DashboardNav activeTab={activeTab} onTabChange={handleTabChange} />
       <main className="transition-smooth">
         {renderActiveTab()}
       </main>

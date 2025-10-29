@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -8,20 +9,30 @@ import { BackendDashboard } from '@/components/BackendDashboard';
 
 export const OverviewTab = () => {
   const metrics = mockClassMetrics;
-  const recentAlerts = mockAlerts.slice(0, 3);
   
-  const weeklyData = [
+  // Memoize recent alerts to avoid recalculating
+  const recentAlerts = useMemo(() => mockAlerts.slice(0, 3), []);
+  
+  const weeklyData = useMemo(() => [
     { week: 'Week 1', engagement: 78, attendance: 85 },
     { week: 'Week 2', engagement: 76, attendance: 82 },
     { week: 'Week 3', engagement: 73, attendance: 84 },
     { week: 'Week 4', engagement: 74, attendance: 84 },
-  ];
+  ], []);
 
-  const getEngagementStatus = (score: number) => {
+  // Memoize at-risk students to avoid filtering on every render
+  const atRiskStudents = useMemo(() => 
+    mockStudents
+      .filter(student => student.status === 'low' || student.engagementScore < 70)
+      .slice(0, 4),
+    []
+  );
+
+  const getEngagementStatus = useMemo(() => (score: number) => {
     if (score >= 80) return { color: 'bg-engagement-high', label: 'High', variant: 'default' as const };
     if (score >= 60) return { color: 'bg-engagement-medium', label: 'Medium', variant: 'secondary' as const };
     return { color: 'bg-engagement-low', label: 'Low', variant: 'destructive' as const };
-  };
+  }, []);
 
   return (
     <div className="space-y-6 p-6">
@@ -123,10 +134,7 @@ export const OverviewTab = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockStudents
-                .filter(student => student.status === 'low' || student.engagementScore < 70)
-                .slice(0, 4)
-                .map((student) => {
+              {atRiskStudents.map((student) => {
                   const status = getEngagementStatus(student.engagementScore);
                   return (
                     <div key={student.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">

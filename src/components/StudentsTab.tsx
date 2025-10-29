@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -12,23 +12,33 @@ export const StudentsTab = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
 
-  const filteredStudents = mockStudents.filter(student => {
-    const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || student.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  // Memoize filtered students to avoid recalculating on every render
+  const filteredStudents = useMemo(() => {
+    return mockStudents.filter(student => {
+      const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           student.email.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || student.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [searchTerm, statusFilter]);
 
-  const getEngagementBadge = (score: number, status: string) => {
+  // Memoize selected student data to avoid recalculating
+  const selectedStudentData = useMemo(() => 
+    selectedStudent ? mockStudents.find(s => s.id === selectedStudent) : null,
+    [selectedStudent]
+  );
+
+  // Memoize callbacks
+  const getEngagementBadge = useCallback((score: number, status: string) => {
     const variants = {
       high: 'default' as const,
       medium: 'secondary' as const, 
       low: 'destructive' as const
     };
     return variants[status as keyof typeof variants] || 'secondary';
-  };
+  }, []);
 
-  const getTrendIcon = (weeklyData: Array<{ week: string; score: number }>) => {
+  const getTrendIcon = useCallback((weeklyData: Array<{ week: string; score: number }>) => {
     if (weeklyData.length < 2) return <Minus className="w-3 h-3" />;
     const latest = weeklyData[weeklyData.length - 1].score;
     const previous = weeklyData[weeklyData.length - 2].score;
@@ -36,9 +46,7 @@ export const StudentsTab = () => {
     if (latest > previous) return <TrendingUp className="w-3 h-3 text-engagement-high" />;
     if (latest < previous) return <TrendingDown className="w-3 h-3 text-engagement-low" />;
     return <Minus className="w-3 h-3 text-muted-foreground" />;
-  };
-
-  const selectedStudentData = selectedStudent ? mockStudents.find(s => s.id === selectedStudent) : null;
+  }, []);
 
   return (
     <div className="space-y-6 p-6">
