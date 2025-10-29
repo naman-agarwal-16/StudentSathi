@@ -89,7 +89,7 @@ describe('StudentController Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.error).toContain('Validation');
+      expect(response.body.message).toContain('Invalid request data');
     });
 
     it('should return 400 with missing required fields', async () => {
@@ -100,7 +100,7 @@ describe('StudentController Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.error).toContain('Validation');
+      expect(response.body.message).toContain('Invalid request data');
     });
 
     it('should return 409 when email already exists', async () => {
@@ -128,7 +128,7 @@ describe('StudentController Integration Tests', () => {
         });
 
       expect(response.status).toBe(409);
-      expect(response.body.error).toContain('this email already exists');
+      expect(response.body.message).toContain('this email already exists');
     });
 
     it('should return 409 when studentId already exists', async () => {
@@ -156,7 +156,7 @@ describe('StudentController Integration Tests', () => {
         });
 
       expect(response.status).toBe(409);
-      expect(response.body.error).toContain('this ID already exists');
+      expect(response.body.message).toContain('this ID already exists');
     });
   });
 
@@ -193,7 +193,7 @@ describe('StudentController Integration Tests', () => {
       const response = await request(app).get('/api/students/999');
 
       expect(response.status).toBe(404);
-      expect(response.body.error).toContain('not found');
+      expect(response.body.message).toContain('not found');
     });
   });
 
@@ -232,7 +232,7 @@ describe('StudentController Integration Tests', () => {
       const response = await request(app).get('/api/students?page=1&limit=10');
 
       expect(response.status).toBe(200);
-      expect(response.body.students).toHaveLength(2);
+      expect(response.body.data).toHaveLength(2);
       expect(response.body.pagination).toEqual({
         page: 1,
         limit: 10,
@@ -248,7 +248,7 @@ describe('StudentController Integration Tests', () => {
       const response = await request(app).get('/api/students');
 
       expect(response.status).toBe(200);
-      expect(response.body.students).toHaveLength(0);
+      expect(response.body.data).toHaveLength(0);
       expect(response.body.pagination.total).toBe(0);
     });
   });

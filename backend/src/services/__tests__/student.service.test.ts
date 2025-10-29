@@ -282,7 +282,7 @@ describe('StudentService', () => {
     it('should handle database errors in getAllStudents', async () => {
       (mockPrismaClient.student.count as jest.Mock).mockRejectedValue(new Error('Database error'));
 
-      await expect(studentService.getAllStudents({ page: 1, limit: 20 })).rejects.toThrow(AppError);
+      await expect(studentService.getAllStudents({ page: 1, limit: 20, sortOrder: 'desc' })).rejects.toThrow(AppError);
     });
 
     it('should handle database errors in updateStudent', async () => {

@@ -17,11 +17,12 @@ jest.mock('@prisma/client', () => {
 
 // Mock logger
 jest.mock('../../utils/logger.js', () => ({
+  __esModule: true,
   default: {
     info: jest.fn(),
+    warn: jest.fn(),
     error: jest.fn(),
     debug: jest.fn(),
-    warn: jest.fn(),
   },
 }));
 
@@ -52,6 +53,13 @@ describe('DatabaseService', () => {
     it('should create only one PrismaClient instance', () => {
       const PrismaClientConstructor = PrismaClient as jest.MockedClass<typeof PrismaClient>;
       
+      // Clear previous calls
+      PrismaClientConstructor.mockClear();
+      
+      // Reset singleton
+      // @ts-expect-error - accessing private static property for testing
+      DatabaseService.instance = undefined;
+      
       DatabaseService.getInstance();
       DatabaseService.getInstance();
       DatabaseService.getInstance();
@@ -67,7 +75,7 @@ describe('DatabaseService', () => {
       const client = service.getClient();
 
       expect(client).toBeDefined();
-      expect(client).toBeInstanceOf(PrismaClient);
+      expect(client).toBe(mockPrismaClient);
     });
   });
 
