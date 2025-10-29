@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -35,7 +35,24 @@ export const BackendDashboard = () => {
 
   const [isGlobalSync, setIsGlobalSync] = useState(false);
 
-  const syncAllData = async () => {
+  // Memoize simulation functions
+  const simulateSupabaseSync = useCallback(() => 
+    new Promise(resolve => setTimeout(resolve, 1500)), []
+  );
+  
+  const simulateGoogleClassroomSync = useCallback(() => 
+    new Promise(resolve => setTimeout(resolve, 2000)), []
+  );
+  
+  const simulateCanvasSync = useCallback(() => 
+    new Promise(resolve => setTimeout(resolve, 1800)), []
+  );
+  
+  const simulateZapierSync = useCallback(() => 
+    new Promise(resolve => setTimeout(resolve, 1000)), []
+  );
+
+  const syncAllData = useCallback(async () => {
     setIsGlobalSync(true);
     
     // Update all to syncing
@@ -79,9 +96,9 @@ export const BackendDashboard = () => {
     } finally {
       setIsGlobalSync(false);
     }
-  };
+  }, [toast, simulateSupabaseSync, simulateGoogleClassroomSync, simulateCanvasSync, simulateZapierSync]);
 
-  const syncIndividual = async (source: string) => {
+  const syncIndividual = useCallback(async (source: string) => {
     setSyncStatuses(prev => prev.map(status => 
       status.source === source 
         ? { ...status, status: 'syncing' }
@@ -106,22 +123,9 @@ export const BackendDashboard = () => {
       title: "Sync Complete",
       description: `${source} data has been updated`,
     });
-  };
+  }, [toast]);
 
-  // Simulation functions
-  const simulateSupabaseSync = () => 
-    new Promise(resolve => setTimeout(resolve, 1500));
-  
-  const simulateGoogleClassroomSync = () => 
-    new Promise(resolve => setTimeout(resolve, 2000));
-  
-  const simulateCanvasSync = () => 
-    new Promise(resolve => setTimeout(resolve, 1800));
-  
-  const simulateZapierSync = () => 
-    new Promise(resolve => setTimeout(resolve, 1000));
-
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = useCallback((status: string) => {
     switch (status) {
       case 'syncing':
         return <RefreshCw className="w-4 h-4 animate-spin text-primary" />;
@@ -132,16 +136,16 @@ export const BackendDashboard = () => {
       default:
         return <Wifi className="w-4 h-4 text-muted-foreground" />;
     }
-  };
+  }, []);
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = useCallback((status: string) => {
     switch (status) {
       case 'syncing': return 'secondary';
       case 'success': return 'default';
       case 'error': return 'destructive';
       default: return 'outline';
     }
-  };
+  }, []);
 
   return (
     <div className="space-y-6">

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -21,40 +22,53 @@ import {
 } from 'recharts';
 
 export const AnalyticsTab = () => {
-  // Generate analytics data
-  const engagementDistribution = [
+  // Memoize all analytics data calculations to avoid recomputing on every render
+  const engagementDistribution = useMemo(() => [
     { range: '90-100%', count: mockStudents.filter(s => s.engagementScore >= 90).length, color: 'hsl(var(--engagement-high))' },
     { range: '80-89%', count: mockStudents.filter(s => s.engagementScore >= 80 && s.engagementScore < 90).length, color: 'hsl(var(--engagement-high))' },
     { range: '70-79%', count: mockStudents.filter(s => s.engagementScore >= 70 && s.engagementScore < 80).length, color: 'hsl(var(--engagement-medium))' },
     { range: '60-69%', count: mockStudents.filter(s => s.engagementScore >= 60 && s.engagementScore < 70).length, color: 'hsl(var(--engagement-medium))' },
     { range: '0-59%', count: mockStudents.filter(s => s.engagementScore < 60).length, color: 'hsl(var(--engagement-low))' },
-  ];
+  ], []);
 
-  const subjectPerformance = [
+  const subjectPerformance = useMemo(() => [
     { subject: 'Mathematics', avgGrade: 79.4, avgEngagement: 77.2 },
     { subject: 'Science', avgGrade: 78.6, avgEngagement: 76.4 },
     { subject: 'English', avgGrade: 78.8, avgEngagement: 74.8 }
-  ];
+  ], []);
 
-  const weeklyTrends = [
+  const weeklyTrends = useMemo(() => [
     { week: 'Week 1', engagement: 78.2, attendance: 85.2, assignments: 82.4 },
     { week: 'Week 2', engagement: 76.8, attendance: 82.6, assignments: 79.8 },
     { week: 'Week 3', engagement: 73.4, attendance: 84.2, assignments: 78.2 },
     { week: 'Week 4', engagement: 74.2, attendance: 83.6, assignments: 80.4 },
-  ];
+  ], []);
 
-  const engagementVsPerformance = mockStudents.map(student => ({
-    name: student.name,
-    engagement: student.engagementScore,
-    performance: student.averageGrade,
-    attendance: student.attendanceRate
-  }));
+  const engagementVsPerformance = useMemo(() => 
+    mockStudents.map(student => ({
+      name: student.name,
+      engagement: student.engagementScore,
+      performance: student.averageGrade,
+      attendance: student.attendanceRate
+    })),
+    []
+  );
 
-  const statusDistribution = [
+  const statusDistribution = useMemo(() => [
     { name: 'High Engagement', value: mockStudents.filter(s => s.status === 'high').length, color: 'hsl(var(--engagement-high))' },
     { name: 'Medium Engagement', value: mockStudents.filter(s => s.status === 'medium').length, color: 'hsl(var(--engagement-medium))' },
     { name: 'Low Engagement', value: mockStudents.filter(s => s.status === 'low').length, color: 'hsl(var(--engagement-low))' },
-  ];
+  ], []);
+
+  const atRiskCount = useMemo(() => 
+    mockStudents.filter(s => s.engagementScore < 60).length,
+    []
+  );
+
+  const topPerformersCount = useMemo(() => 
+    mockStudents.filter(s => s.engagementScore >= 85).length,
+    []
+  );
 
   return (
     <div className="space-y-6 p-6">
@@ -100,7 +114,7 @@ export const AnalyticsTab = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-destructive">
-              {mockStudents.filter(s => s.engagementScore < 60).length}
+              {atRiskCount}
             </div>
             <p className="text-xs text-muted-foreground">Need immediate attention</p>
           </CardContent>
@@ -113,7 +127,7 @@ export const AnalyticsTab = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-engagement-high">
-              {mockStudents.filter(s => s.engagementScore >= 85).length}
+              {topPerformersCount}
             </div>
             <p className="text-xs text-muted-foreground">High engagement students</p>
           </CardContent>

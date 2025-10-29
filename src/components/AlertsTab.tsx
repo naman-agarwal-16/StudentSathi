@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,27 +11,44 @@ export const AlertsTab = () => {
   const [filterType, setFilterType] = useState('all');
   const [filterSeverity, setFilterSeverity] = useState('all');
 
-  const filteredAlerts = alerts.filter(alert => {
-    const matchesType = filterType === 'all' || alert.type === filterType;
-    const matchesSeverity = filterSeverity === 'all' || alert.severity === filterSeverity;
-    return matchesType && matchesSeverity;
-  });
+  // Memoize filtered alerts to avoid recalculating on every render
+  const filteredAlerts = useMemo(() => {
+    return alerts.filter(alert => {
+      const matchesType = filterType === 'all' || alert.type === filterType;
+      const matchesSeverity = filterSeverity === 'all' || alert.severity === filterSeverity;
+      return matchesType && matchesSeverity;
+    });
+  }, [alerts, filterType, filterSeverity]);
 
-  const markAsRead = (alertId: string) => {
+  // Memoize unread count to avoid recalculating
+  const unreadCount = useMemo(() => 
+    alerts.filter(alert => !alert.isRead).length,
+    [alerts]
+  );
+
+  // Memoize severity counts
+  const severityCounts = useMemo(() => ({
+    high: alerts.filter(a => a.severity === 'high').length,
+    medium: alerts.filter(a => a.severity === 'medium').length,
+    low: alerts.filter(a => a.severity === 'low').length,
+  }), [alerts]);
+
+  // Memoize callbacks
+  const markAsRead = useCallback((alertId: string) => {
     setAlerts(prev => prev.map(alert => 
       alert.id === alertId ? { ...alert, isRead: true } : alert
     ));
-  };
+  }, []);
 
-  const markAllAsRead = () => {
+  const markAllAsRead = useCallback(() => {
     setAlerts(prev => prev.map(alert => ({ ...alert, isRead: true })));
-  };
+  }, []);
 
-  const dismissAlert = (alertId: string) => {
+  const dismissAlert = useCallback((alertId: string) => {
     setAlerts(prev => prev.filter(alert => alert.id !== alertId));
-  };
+  }, []);
 
-  const getAlertIcon = (type: string) => {
+  const getAlertIcon = useCallback((type: string) => {
     switch (type) {
       case 'engagement_drop': return '📉';
       case 'attendance_low': return '🕒';
@@ -39,22 +56,20 @@ export const AlertsTab = () => {
       case 'missed_assignment': return '📝';
       default: return '⚠️';
     }
-  };
+  }, []);
 
-  const getSeverityColor = (severity: string) => {
+  const getSeverityColor = useCallback((severity: string) => {
     switch (severity) {
       case 'high': return 'destructive';
       case 'medium': return 'secondary';
       case 'low': return 'outline';
       default: return 'outline';
     }
-  };
+  }, []);
 
-  const getAlertTypeLabel = (type: string) => {
+  const getAlertTypeLabel = useCallback((type: string) => {
     return type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-  };
-
-  const unreadCount = alerts.filter(alert => !alert.isRead).length;
+  }, []);
 
   return (
     <div className="space-y-6 p-6">
@@ -83,7 +98,7 @@ export const AlertsTab = () => {
         <Card className="transition-smooth hover:shadow-lg">
           <CardContent className="p-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-destructive">{alerts.filter(a => a.severity === 'high').length}</div>
+              <div className="text-2xl font-bold text-destructive">{severityCounts.high}</div>
               <p className="text-sm text-muted-foreground">High Priority</p>
             </div>
           </CardContent>
@@ -92,7 +107,7 @@ export const AlertsTab = () => {
         <Card className="transition-smooth hover:shadow-lg">
           <CardContent className="p-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-warning">{alerts.filter(a => a.severity === 'medium').length}</div>
+              <div className="text-2xl font-bold text-warning">{severityCounts.medium}</div>
               <p className="text-sm text-muted-foreground">Medium Priority</p>
             </div>
           </CardContent>
@@ -101,7 +116,7 @@ export const AlertsTab = () => {
         <Card className="transition-smooth hover:shadow-lg">
           <CardContent className="p-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-muted-foreground">{alerts.filter(a => a.severity === 'low').length}</div>
+              <div className="text-2xl font-bold text-muted-foreground">{severityCounts.low}</div>
               <p className="text-sm text-muted-foreground">Low Priority</p>
             </div>
           </CardContent>
