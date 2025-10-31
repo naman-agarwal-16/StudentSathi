@@ -1,4 +1,4 @@
-import { PrismaClient, Alert, AlertType, AlertSeverity, AlertStatus } from '@prisma/client';
+import { PrismaClient, Alert, AlertType, AlertSeverity, AlertStatus, Prisma } from '@prisma/client';
 import logger from '../utils/logger.js';
 import { CreateAlertDto } from '../types/dtos.js';
 
@@ -17,7 +17,7 @@ export class AlertService {
           type: data.type as AlertType,
           severity: data.severity as AlertSeverity,
           message: data.message,
-          metadata: data.metadata as Record<string, unknown> | undefined,
+          metadata: data.metadata as Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue,
         },
       });
 
