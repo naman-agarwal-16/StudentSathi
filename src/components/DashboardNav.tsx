@@ -1,7 +1,9 @@
-import { Bell, Home, Users, BarChart3, Settings, AlertTriangle } from 'lucide-react';
+import { Bell, Home, Users, BarChart3, Settings, AlertTriangle, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { mockAlerts } from '@/data/mockData';
+import { useAuth } from '@/hooks/useAuth';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/services/api';
 
 interface DashboardNavProps {
   activeTab: string;
@@ -9,7 +11,16 @@ interface DashboardNavProps {
 }
 
 export const DashboardNav = ({ activeTab, onTabChange }: DashboardNavProps) => {
-  const unreadAlerts = mockAlerts.filter(alert => !alert.isRead).length;
+  const { user, logout } = useAuth();
+
+  // Fetch unread alert count with 30 second refetch interval
+  const { data: alertData } = useQuery({
+    queryKey: ['unreadAlerts'],
+    queryFn: () => api.getUnreadAlertCount(),
+    refetchInterval: 30000, // 30 seconds
+  });
+
+  const unreadAlerts = alertData?.count || 0;
 
   const navItems = [
     { id: 'overview', label: 'Overview', icon: Home },
@@ -18,6 +29,15 @@ export const DashboardNav = ({ activeTab, onTabChange }: DashboardNavProps) => {
     { id: 'alerts', label: 'Alerts', icon: AlertTriangle, badge: unreadAlerts },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
 
   return (
     <nav className="flex items-center gap-2 p-4 bg-card border-b border-border">
@@ -63,14 +83,20 @@ export const DashboardNav = ({ activeTab, onTabChange }: DashboardNavProps) => {
       </div>
 
       <div className="ml-auto flex items-center gap-2">
-        <Button variant="ghost" size="sm" className="relative">
+        <Button variant="ghost" size="sm" className="relative" onClick={() => onTabChange('alerts')}>
           <Bell className="w-4 h-4" />
           {unreadAlerts > 0 && (
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-destructive rounded-full border-2 border-background" />
           )}
         </Button>
-        <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
-          T
+        
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
+            {user ? getInitials(user.name) : 'U'}
+          </div>
+          <Button variant="ghost" size="sm" onClick={logout} title="Logout">
+            <LogOut className="w-4 h-4" />
+          </Button>
         </div>
       </div>
     </nav>

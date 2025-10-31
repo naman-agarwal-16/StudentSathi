@@ -10,6 +10,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id              String   @id @default(uuid())
+  email           String   @unique @db.VarChar(255)
+  passwordHash    String   @db.VarChar(255)
+  name            String   @db.VarChar(100)
+  role            UserRole @default(TEACHER)
+  resetToken      String?  @db.VarChar(255)
+  resetTokenExpiry DateTime?
+  refreshToken    String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([email])
+  @@map("users")
+}
+
 model Student {
   id               String   @id @default(uuid())
   name             String   @db.VarChar(100)
@@ -42,6 +58,7 @@ model Alert {
   severity    AlertSeverity
   message     String   @db.Text
   status      AlertStatus @default(ACTIVE)
+  isRead      Boolean  @default(false)
   metadata    Json?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -52,6 +69,7 @@ model Alert {
   @@index([studentId])
   @@index([type])
   @@index([status])
+  @@index([isRead])
   @@index([createdAt])
   @@map("alerts")
 }
@@ -97,6 +115,8 @@ model PerformanceRecord {
   subject     String   @db.VarChar(100)
   score       Float    @db.DoublePrecision
   maxScore    Float    @db.DoublePrecision
+  letterGrade String?  @db.VarChar(2)
+  gpa         Float?   @db.DoublePrecision
   date        DateTime
   type        String   @db.VarChar(50) // quiz, test, assignment, exam
   notes       String?  @db.Text
@@ -184,4 +204,10 @@ enum WebhookEvent {
   ATTENDANCE_LOW
   GRADE_DROP
   WEEKLY_REPORT
+}
+
+enum UserRole {
+  ADMIN
+  TEACHER
+  ASSISTANT
 }
