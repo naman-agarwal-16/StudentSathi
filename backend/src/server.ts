@@ -2,13 +2,18 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import config from './config/index.js';
 import logger from './utils/logger.js';
 import DatabaseService from './services/database.service.js';
 import { StudentService } from './services/student.service.js';
+import { AuthService } from './services/auth.service.js';
+import { EmailService } from './services/email.service.js';
 import { StudentController } from './controllers/student.controller.js';
+import { AuthController } from './controllers/auth.controller.js';
 import { createStudentRouter } from './routes/student.routes.js';
+import { createAuthRouter } from './routes/auth.routes.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 
 class Server {
@@ -34,6 +39,9 @@ class Server {
         credentials: true,
       })
     );
+
+    // Cookie parser
+    this.app.use(cookieParser());
 
     // Compression
     this.app.use(compression());
@@ -76,9 +84,16 @@ class Server {
 
     // API routes with dependency injection
     const prisma = this.dbService.getClient();
+    
+    // Auth routes
+    const authService = new AuthService(prisma);
+    const emailService = new EmailService();
+    const authController = new AuthController(authService, emailService);
+    this.app.use('/api/auth', createAuthRouter(authController));
+
+    // Student routes
     const studentService = new StudentService(prisma);
     const studentController = new StudentController(studentService);
-
     this.app.use('/api/students', createStudentRouter(studentController));
 
     // Root route
