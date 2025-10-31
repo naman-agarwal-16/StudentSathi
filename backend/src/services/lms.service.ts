@@ -62,7 +62,7 @@ export class LMSService {
     });
 
     // Return configs with masked API keys
-    return configs.map((config) => ({
+    return configs.map((config: LMSIntegration) => ({
       ...config,
       apiKey: this.maskApiKey(config.apiKey),
     }));

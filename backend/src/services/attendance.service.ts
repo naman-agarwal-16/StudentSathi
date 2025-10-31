@@ -34,7 +34,7 @@ export class AttendanceService {
   async bulkCreateAttendance(data: BulkAttendanceDto): Promise<{ count: number }> {
     try {
       const date = new Date(data.date);
-      const records = data.records.map((record) => ({
+      const records = data.records.map((record: { studentId: string; status: string; notes?: string }) => ({
         studentId: record.studentId,
         date,
         status: record.status as AttendanceStatus,
@@ -47,8 +47,8 @@ export class AttendanceService {
       });
 
       // Update attendance rates for all students
-      const studentIds = data.records.map((r) => r.studentId);
-      await Promise.all(studentIds.map((id) => this.updateStudentAttendanceRate(id)));
+      const studentIds = data.records.map((r: { studentId: string }) => r.studentId);
+      await Promise.all(studentIds.map((id: string) => this.updateStudentAttendanceRate(id)));
 
       logger.info(`Bulk attendance created: ${result.count} records`);
       return { count: result.count };
@@ -66,7 +66,14 @@ export class AttendanceService {
       status?: AttendanceStatus;
     }
   ): Promise<AttendanceRecord[]> {
-    const where: any = { studentId };
+    const where: {
+      studentId: string;
+      date?: {
+        gte?: Date;
+        lte?: Date;
+      };
+      status?: AttendanceStatus;
+    } = { studentId };
 
     if (options?.startDate || options?.endDate) {
       where.date = {};
@@ -88,7 +95,13 @@ export class AttendanceService {
     date: Date,
     options?: { status?: AttendanceStatus }
   ): Promise<AttendanceRecord[]> {
-    const where: any = {
+    const where: {
+      date: {
+        gte: Date;
+        lte: Date;
+      };
+      status?: AttendanceStatus;
+    } = {
       date: {
         gte: new Date(date.setHours(0, 0, 0, 0)),
         lte: new Date(date.setHours(23, 59, 59, 999)),
@@ -119,7 +132,11 @@ export class AttendanceService {
     id: string,
     data: Partial<CreateAttendanceDto>
   ): Promise<AttendanceRecord> {
-    const updateData: any = {};
+    const updateData: {
+      status?: AttendanceStatus;
+      notes?: string;
+      date?: Date;
+    } = {};
 
     if (data.status) updateData.status = data.status;
     if (data.notes !== undefined) updateData.notes = data.notes;
@@ -167,7 +184,7 @@ export class AttendanceService {
       }
 
       const presentCount = records.filter(
-        (r) => r.status === AttendanceStatus.PRESENT || r.status === AttendanceStatus.LATE
+        (r: AttendanceRecord) => r.status === AttendanceStatus.PRESENT || r.status === AttendanceStatus.LATE
       ).length;
 
       const attendanceRate = (presentCount / records.length) * 100;
@@ -196,10 +213,10 @@ export class AttendanceService {
 
     const stats = {
       totalDays: records.length,
-      present: records.filter((r) => r.status === AttendanceStatus.PRESENT).length,
-      absent: records.filter((r) => r.status === AttendanceStatus.ABSENT).length,
-      late: records.filter((r) => r.status === AttendanceStatus.LATE).length,
-      excused: records.filter((r) => r.status === AttendanceStatus.EXCUSED).length,
+      present: records.filter((r: AttendanceRecord) => r.status === AttendanceStatus.PRESENT).length,
+      absent: records.filter((r: AttendanceRecord) => r.status === AttendanceStatus.ABSENT).length,
+      late: records.filter((r: AttendanceRecord) => r.status === AttendanceStatus.LATE).length,
+      excused: records.filter((r: AttendanceRecord) => r.status === AttendanceStatus.EXCUSED).length,
       rate: 0,
     };
 

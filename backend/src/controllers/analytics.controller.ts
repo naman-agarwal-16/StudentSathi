@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { AnalyticsService } from '../services/analytics.service.js';
+import { AuthRequest } from '../middleware/auth.middleware.js';
 import logger from '../utils/logger.js';
 
 export class AnalyticsController {
@@ -9,7 +10,7 @@ export class AnalyticsController {
     this.analyticsService = analyticsService;
   }
 
-  getDashboardSummary = async (req: Request, res: Response): Promise<void> => {
+  getDashboardSummary = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { days } = req.query;
 
@@ -24,11 +25,15 @@ export class AnalyticsController {
     }
   };
 
-  getEngagementTimeSeries = async (req: Request, res: Response): Promise<void> => {
+  getEngagementTimeSeries = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { startDate, endDate, studentId } = req.query;
 
-      const options: any = {};
+      const options: {
+        startDate?: Date;
+        endDate?: Date;
+        studentId?: string;
+      } = {};
       if (startDate) options.startDate = new Date(startDate as string);
       if (endDate) options.endDate = new Date(endDate as string);
       if (studentId) options.studentId = studentId as string;

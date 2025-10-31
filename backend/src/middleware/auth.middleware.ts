@@ -3,21 +3,20 @@ import jwt from 'jsonwebtoken';
 import config from '../config/index.js';
 import logger from '../utils/logger.js';
 
+// Define user type for the request
+export interface AuthUser {
+  userId: string;
+  email: string;
+  role: string;
+}
+
 // Extend Express Request to include user
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        userId: string;
-        email: string;
-        role: string;
-      };
-    }
-  }
+export interface AuthRequest extends Request {
+  user?: AuthUser;
 }
 
 export const authenticate = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -37,11 +36,7 @@ export const authenticate = async (
     }
 
     // Verify token
-    const decoded = jwt.verify(token, config.jwtSecret) as {
-      userId: string;
-      email: string;
-      role: string;
-    };
+    const decoded = jwt.verify(token, config.jwtSecret) as AuthUser;
 
     // Attach user to request
     req.user = decoded;
@@ -57,7 +52,7 @@ export const authenticate = async (
 };
 
 export const authorize = (...roles: string[]) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
       res.status(401).json({
         error: 'Unauthorized',
@@ -79,7 +74,7 @@ export const authorize = (...roles: string[]) => {
 };
 
 export const optionalAuth = async (
-  req: Request,
+  req: AuthRequest,
   _res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -90,11 +85,7 @@ export const optionalAuth = async (
       : req.cookies?.accessToken;
 
     if (token) {
-      const decoded = jwt.verify(token, config.jwtSecret) as {
-        userId: string;
-        email: string;
-        role: string;
-      };
+      const decoded = jwt.verify(token, config.jwtSecret) as AuthUser;
       req.user = decoded;
     }
 

@@ -50,11 +50,16 @@ export class WebhookService {
   }
 
   async updateWebhook(id: string, data: Partial<WebhookConfigDto>): Promise<WebhookConfig> {
-    const updateData: any = {};
+    const updateData: {
+      name?: string;
+      url?: string;
+      event?: WebhookEvent;
+      enabled?: boolean;
+    } = {};
 
     if (data.name) updateData.name = data.name;
     if (data.url) updateData.url = data.url;
-    if (data.event) updateData.event = data.event.toUpperCase();
+    if (data.event) updateData.event = data.event.toUpperCase() as WebhookEvent;
     if (data.enabled !== undefined) updateData.enabled = data.enabled;
 
     const webhook = await this.prisma.webhookConfig.update({
@@ -76,7 +81,7 @@ export class WebhookService {
 
   async triggerWebhook(
     event: WebhookEvent,
-    payload: any
+    payload: Record<string, unknown>
   ): Promise<{ success: boolean; message: string }> {
     // Stub implementation - returns success
     // In production, this would queue a job to send webhooks

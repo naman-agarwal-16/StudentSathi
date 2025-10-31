@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { PerformanceService } from '../services/performance.service.js';
+import { AuthRequest } from '../middleware/auth.middleware.js';
 import logger from '../utils/logger.js';
 
 export class PerformanceController {
@@ -9,7 +10,7 @@ export class PerformanceController {
     this.performanceService = performanceService;
   }
 
-  createPerformance = async (req: Request, res: Response): Promise<void> => {
+  createPerformance = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const performance = await this.performanceService.createPerformance(req.body);
       res.status(201).json(performance);
@@ -20,7 +21,7 @@ export class PerformanceController {
     }
   };
 
-  getPerformanceById = async (req: Request, res: Response): Promise<void> => {
+  getPerformanceById = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const performance = await this.performanceService.getPerformanceById(req.params.id);
       res.status(200).json(performance);
@@ -30,12 +31,17 @@ export class PerformanceController {
     }
   };
 
-  getPerformanceByStudent = async (req: Request, res: Response): Promise<void> => {
+  getPerformanceByStudent = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { studentId } = req.params;
       const { subject, type, startDate, endDate } = req.query;
 
-      const options: any = {};
+      const options: {
+        subject?: string;
+        type?: string;
+        startDate?: Date;
+        endDate?: Date;
+      } = {};
       if (subject) options.subject = subject as string;
       if (type) options.type = type as string;
       if (startDate) options.startDate = new Date(startDate as string);
@@ -49,7 +55,7 @@ export class PerformanceController {
     }
   };
 
-  updatePerformance = async (req: Request, res: Response): Promise<void> => {
+  updatePerformance = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
       const performance = await this.performanceService.updatePerformance(id, req.body);
@@ -60,7 +66,7 @@ export class PerformanceController {
     }
   };
 
-  deletePerformance = async (req: Request, res: Response): Promise<void> => {
+  deletePerformance = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
       await this.performanceService.deletePerformance(id);
@@ -71,12 +77,16 @@ export class PerformanceController {
     }
   };
 
-  getStudentGPA = async (req: Request, res: Response): Promise<void> => {
+  getStudentGPA = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { studentId } = req.params;
       const { subject, startDate, endDate } = req.query;
 
-      const options: any = {};
+      const options: {
+        subject?: string;
+        startDate?: Date;
+        endDate?: Date;
+      } = {};
       if (subject) options.subject = subject as string;
       if (startDate) options.startDate = new Date(startDate as string);
       if (endDate) options.endDate = new Date(endDate as string);

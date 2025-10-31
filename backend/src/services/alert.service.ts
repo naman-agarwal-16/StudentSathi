@@ -70,7 +70,13 @@ export class AlertService {
       isRead,
     } = options;
 
-    const where: any = {};
+    const where: {
+      studentId?: string;
+      type?: AlertType;
+      severity?: AlertSeverity;
+      status?: AlertStatus;
+      isRead?: boolean;
+    } = {};
 
     if (studentId) where.studentId = studentId;
     if (type) where.type = type;

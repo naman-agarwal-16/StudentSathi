@@ -210,7 +210,14 @@ export class AnalyticsService {
     endDate?: Date;
     studentId?: string;
   }): Promise<Array<{ date: string; value: number }>> {
-    const where: any = { metric: 'engagement' };
+    const where: {
+      metric: string;
+      studentId?: string;
+      timestamp?: {
+        gte?: Date;
+        lte?: Date;
+      };
+    } = { metric: 'engagement' };
 
     if (options.studentId) where.studentId = options.studentId;
 

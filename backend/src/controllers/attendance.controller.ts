@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { AttendanceService } from '../services/attendance.service.js';
+import { AuthRequest } from '../middleware/auth.middleware.js';
 import logger from '../utils/logger.js';
 
 export class AttendanceController {
@@ -9,7 +10,7 @@ export class AttendanceController {
     this.attendanceService = attendanceService;
   }
 
-  createAttendance = async (req: Request, res: Response): Promise<void> => {
+  createAttendance = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const attendance = await this.attendanceService.createAttendance(req.body);
       res.status(201).json(attendance);
@@ -20,7 +21,7 @@ export class AttendanceController {
     }
   };
 
-  bulkCreateAttendance = async (req: Request, res: Response): Promise<void> => {
+  bulkCreateAttendance = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const result = await this.attendanceService.bulkCreateAttendance(req.body);
       res.status(201).json(result);
@@ -31,15 +32,19 @@ export class AttendanceController {
     }
   };
 
-  getAttendanceByStudent = async (req: Request, res: Response): Promise<void> => {
+  getAttendanceByStudent = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { studentId } = req.params;
       const { startDate, endDate, status } = req.query;
 
-      const options: any = {};
+      const options: {
+        startDate?: Date;
+        endDate?: Date;
+        status?: import('@prisma/client').AttendanceStatus;
+      } = {};
       if (startDate) options.startDate = new Date(startDate as string);
       if (endDate) options.endDate = new Date(endDate as string);
-      if (status) options.status = status;
+      if (status) options.status = status as import('@prisma/client').AttendanceStatus;
 
       const records = await this.attendanceService.getAttendanceByStudent(studentId, options);
       res.status(200).json(records);
@@ -49,7 +54,7 @@ export class AttendanceController {
     }
   };
 
-  getAttendanceByDate = async (req: Request, res: Response): Promise<void> => {
+  getAttendanceByDate = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { date } = req.query;
       const { status } = req.query;
@@ -59,8 +64,8 @@ export class AttendanceController {
         return;
       }
 
-      const options: any = {};
-      if (status) options.status = status;
+      const options: { status?: import('@prisma/client').AttendanceStatus } = {};
+      if (status) options.status = status as import('@prisma/client').AttendanceStatus;
 
       const records = await this.attendanceService.getAttendanceByDate(
         new Date(date as string),
@@ -73,7 +78,7 @@ export class AttendanceController {
     }
   };
 
-  updateAttendance = async (req: Request, res: Response): Promise<void> => {
+  updateAttendance = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
       const attendance = await this.attendanceService.updateAttendance(id, req.body);
@@ -84,7 +89,7 @@ export class AttendanceController {
     }
   };
 
-  deleteAttendance = async (req: Request, res: Response): Promise<void> => {
+  deleteAttendance = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
       await this.attendanceService.deleteAttendance(id);
@@ -95,7 +100,7 @@ export class AttendanceController {
     }
   };
 
-  getAttendanceStats = async (req: Request, res: Response): Promise<void> => {
+  getAttendanceStats = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { studentId } = req.params;
       const stats = await this.attendanceService.getAttendanceStats(studentId);

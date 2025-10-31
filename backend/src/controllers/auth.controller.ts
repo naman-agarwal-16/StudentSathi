@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { AuthRequest } from '../middleware/auth.middleware.js';
 import { AuthService } from '../services/auth.service.js';
 import { EmailService } from '../services/email.service.js';
 import logger from '../utils/logger.js';
@@ -13,7 +14,7 @@ export class AuthController {
     this.emailService = emailService;
   }
 
-  register = async (req: Request, res: Response): Promise<void> => {
+  register = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const data: RegisterDto = req.body;
       const result = await this.authService.register(data);
@@ -45,7 +46,7 @@ export class AuthController {
     }
   };
 
-  login = async (req: Request, res: Response): Promise<void> => {
+  login = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const data: LoginDto = req.body;
       const result = await this.authService.login(data);
@@ -71,7 +72,7 @@ export class AuthController {
     }
   };
 
-  logout = async (req: Request, res: Response): Promise<void> => {
+  logout = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const userId = req.user?.userId;
 
@@ -94,7 +95,7 @@ export class AuthController {
     }
   };
 
-  refreshToken = async (req: Request, res: Response): Promise<void> => {
+  refreshToken = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const refreshToken = req.cookies?.refreshToken;
 
@@ -120,7 +121,7 @@ export class AuthController {
     }
   };
 
-  forgotPassword = async (req: Request, res: Response): Promise<void> => {
+  forgotPassword = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { email } = req.body;
 
@@ -144,7 +145,7 @@ export class AuthController {
     }
   };
 
-  resetPassword = async (req: Request, res: Response): Promise<void> => {
+  resetPassword = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { token, password } = req.body;
 
@@ -163,7 +164,7 @@ export class AuthController {
     }
   };
 
-  getCurrentUser = async (req: Request, res: Response): Promise<void> => {
+  getCurrentUser = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       if (!req.user) {
         res.status(401).json({

@@ -68,7 +68,15 @@ export class PerformanceService {
       endDate?: Date;
     }
   ): Promise<PerformanceRecord[]> {
-    const where: any = { studentId };
+    const where: {
+      studentId: string;
+      subject?: string;
+      type?: string;
+      date?: {
+        gte?: Date;
+        lte?: Date;
+      };
+    } = { studentId };
 
     if (options?.subject) where.subject = options.subject;
     if (options?.type) where.type = options.type;
@@ -89,7 +97,16 @@ export class PerformanceService {
     id: string,
     data: Partial<CreatePerformanceDto>
   ): Promise<PerformanceRecord> {
-    const updateData: any = {};
+    const updateData: {
+      score?: number;
+      maxScore?: number;
+      subject?: string;
+      type?: string;
+      notes?: string;
+      date?: Date;
+      letterGrade?: string;
+      gpa?: number;
+    } = {};
 
     if (data.score !== undefined) updateData.score = data.score;
     if (data.maxScore !== undefined) updateData.maxScore = data.maxScore;
@@ -142,7 +159,14 @@ export class PerformanceService {
     overallGPA: number;
     subjectGPAs: Array<{ subject: string; gpa: number; count: number }>;
   }> {
-    const where: any = { studentId };
+    const where: {
+      studentId: string;
+      subject?: string;
+      date?: {
+        gte?: Date;
+        lte?: Date;
+      };
+    } = { studentId };
 
     if (options?.subject) where.subject = options.subject;
 
@@ -161,13 +185,13 @@ export class PerformanceService {
     }
 
     // Calculate overall GPA
-    const totalGPA = records.reduce((sum, record) => sum + (record.gpa || 0), 0);
+    const totalGPA = records.reduce((sum: number, record: PerformanceRecord) => sum + (record.gpa || 0), 0);
     const overallGPA = totalGPA / records.length;
 
     // Calculate per-subject GPA
     const subjectMap = new Map<string, { totalGPA: number; count: number }>();
 
-    records.forEach((record) => {
+    records.forEach((record: PerformanceRecord) => {
       const existing = subjectMap.get(record.subject) || { totalGPA: 0, count: 0 };
       subjectMap.set(record.subject, {
         totalGPA: existing.totalGPA + (record.gpa || 0),
