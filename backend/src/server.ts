@@ -8,12 +8,8 @@ import config from './config/index.js';
 import logger from './utils/logger.js';
 import DatabaseService from './services/database.service.js';
 import { StudentService } from './services/student.service.js';
-import { AuthService } from './services/auth.service.js';
-import { EmailService } from './services/email.service.js';
 import { StudentController } from './controllers/student.controller.js';
-import { AuthController } from './controllers/auth.controller.js';
 import { createStudentRouter } from './routes/student.routes.js';
-import { createAuthRouter } from './routes/auth.routes.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 
 class Server {
@@ -23,8 +19,11 @@ class Server {
   constructor() {
     this.app = express();
     this.dbService = DatabaseService.getInstance();
+  }
+
+  async initialize(): Promise<void> {
     this.configureMiddleware();
-    this.configureRoutes();
+    await this.configureRoutes();
     this.configureErrorHandling();
   }
 
@@ -70,7 +69,7 @@ class Server {
     });
   }
 
-  private configureRoutes(): void {
+  private async configureRoutes(): Promise<void> {
     // Health check
     this.app.get('/health', async (_req: Request, res: Response) => {
       const dbHealthy = await this.dbService.healthCheck();
@@ -86,6 +85,11 @@ class Server {
     const prisma = this.dbService.getClient();
     
     // Auth routes
+    const { AuthService } = await import('./services/auth.service.js');
+    const { EmailService } = await import('./services/email.service.js');
+    const { AuthController } = await import('./controllers/auth.controller.js');
+    const { createAuthRouter } = await import('./routes/auth.routes.js');
+    
     const authService = new AuthService(prisma);
     const emailService = new EmailService();
     const authController = new AuthController(authService, emailService);
@@ -95,6 +99,53 @@ class Server {
     const studentService = new StudentService(prisma);
     const studentController = new StudentController(studentService);
     this.app.use('/api/students', createStudentRouter(studentController));
+
+    // Alert routes
+    const { AlertService } = await import('./services/alert.service.js');
+    const { AlertController } = await import('./controllers/alert.controller.js');
+    const { createAlertRouter } = await import('./routes/alert.routes.js');
+    
+    const alertService = new AlertService(prisma);
+    const alertController = new AlertController(alertService);
+    this.app.use('/api/alerts', createAlertRouter(alertController));
+
+    // Attendance routes
+    const { AttendanceService } = await import('./services/attendance.service.js');
+    const { AttendanceController } = await import('./controllers/attendance.controller.js');
+    const { createAttendanceRouter } = await import('./routes/attendance.routes.js');
+    
+    const attendanceService = new AttendanceService(prisma);
+    const attendanceController = new AttendanceController(attendanceService);
+    this.app.use('/api/attendance', createAttendanceRouter(attendanceController));
+
+    // Performance routes
+    const { PerformanceService } = await import('./services/performance.service.js');
+    const { PerformanceController } = await import('./controllers/performance.controller.js');
+    const { createPerformanceRouter } = await import('./routes/performance.routes.js');
+    
+    const performanceService = new PerformanceService(prisma);
+    const performanceController = new PerformanceController(performanceService);
+    this.app.use('/api/performance', createPerformanceRouter(performanceController));
+
+    // Analytics routes
+    const { AnalyticsService } = await import('./services/analytics.service.js');
+    const { AnalyticsController } = await import('./controllers/analytics.controller.js');
+    const { createAnalyticsRouter } = await import('./routes/analytics.routes.js');
+    
+    const analyticsService = new AnalyticsService(prisma);
+    const analyticsController = new AnalyticsController(analyticsService);
+    this.app.use('/api/analytics', createAnalyticsRouter(analyticsController));
+
+    // Integration routes (LMS & Webhooks)
+    const { LMSService } = await import('./services/lms.service.js');
+    const { WebhookService } = await import('./services/webhook.service.js');
+    const { IntegrationController } = await import('./controllers/integration.controller.js');
+    const { createIntegrationRouter } = await import('./routes/integration.routes.js');
+    
+    const lmsService = new LMSService(prisma);
+    const webhookService = new WebhookService(prisma);
+    const integrationController = new IntegrationController(lmsService, webhookService);
+    this.app.use('/api/integrations', createIntegrationRouter(integrationController));
 
     // Root route
     this.app.get('/', (_req: Request, res: Response) => {
@@ -113,6 +164,9 @@ class Server {
 
   public async start(): Promise<void> {
     try {
+      // Initialize routes
+      await this.initialize();
+
       // Connect to database
       await this.dbService.connect();
 
