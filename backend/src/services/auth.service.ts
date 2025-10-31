@@ -143,18 +143,17 @@ export class AuthService {
       where: { email },
     });
 
+    // Always generate a token to maintain consistent response time (security)
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    
     if (!user) {
-      // Return success even if user doesn't exist (security best practice)
+      // Return dummy token but don't save it (security best practice)
       logger.warn(`Password reset requested for non-existent email: ${email}`);
-      // Generate a dummy token to maintain consistent response time
-      return { resetToken: crypto.randomBytes(32).toString('hex') };
+      return { resetToken };
     }
 
-    // Generate reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    // Store reset token only for existing user
     const resetTokenExpiry = new Date(Date.now() + this.resetTokenExpiry);
-
-    // Store reset token
     await this.prisma.user.update({
       where: { id: user.id },
       data: {

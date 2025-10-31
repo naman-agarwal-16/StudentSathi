@@ -128,12 +128,26 @@ class ApiService {
     return response.data;
   }
 
-  async createStudent(data: any) {
+  async createStudent(data: {
+    name: string;
+    email: string;
+    studentId: string;
+    enrollmentDate?: string;
+    grade?: string;
+    section?: string;
+  }) {
     const response = await this.api.post('/students', data);
     return response.data;
   }
 
-  async updateStudent(id: string, data: any) {
+  async updateStudent(id: string, data: {
+    name?: string;
+    email?: string;
+    studentId?: string;
+    enrollmentDate?: string;
+    grade?: string;
+    section?: string;
+  }) {
     const response = await this.api.put(`/students/${id}`, data);
     return response.data;
   }

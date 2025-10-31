@@ -92,16 +92,33 @@ export class LMSService {
   }
 
   private encrypt(text: string): string {
-    // Simple encryption - in production use proper encryption library
+    // Generate random IV for each encryption
+    const iv = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv(
       'aes-256-cbc',
       Buffer.from(this.encryptionKey.padEnd(32, '0').substring(0, 32)),
-      Buffer.alloc(16, 0)
+      iv
     );
     let encrypted = cipher.update(text, 'utf8', 'hex');
     encrypted += cipher.final('hex');
-    return encrypted;
+    // Prepend IV to encrypted data (IV doesn't need to be secret)
+    return iv.toString('hex') + ':' + encrypted;
   }
+
+  // Decrypt function for future use when retrieving API keys
+  // private decrypt(encryptedWithIv: string): string {
+  //   const parts = encryptedWithIv.split(':');
+  //   const iv = Buffer.from(parts[0], 'hex');
+  //   const encrypted = parts[1];
+  //   const decipher = crypto.createDecipheriv(
+  //     'aes-256-cbc',
+  //     Buffer.from(this.encryptionKey.padEnd(32, '0').substring(0, 32)),
+  //     iv
+  //   );
+  //   let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+  //   decrypted += decipher.final('utf8');
+  //   return decrypted;
+  // }
 
   private maskApiKey(apiKey: string): string {
     if (apiKey.length <= 8) return '********';
