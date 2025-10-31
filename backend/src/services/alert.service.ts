@@ -17,7 +17,7 @@ export class AlertService {
           type: data.type as AlertType,
           severity: data.severity as AlertSeverity,
           message: data.message,
-          metadata: data.metadata as any,
+          metadata: data.metadata as Record<string, unknown> | undefined,
         },
       });
 

@@ -39,9 +39,9 @@ export class AlertController {
         page: page ? parseInt(page as string) : undefined,
         limit: limit ? parseInt(limit as string) : undefined,
         studentId: studentId as string,
-        type: type as any,
-        severity: severity as any,
-        status: status as any,
+        type: type as import('@prisma/client').AlertType | undefined,
+        severity: severity as import('@prisma/client').AlertSeverity | undefined,
+        status: status as import('@prisma/client').AlertStatus | undefined,
         isRead: isRead === 'true' ? true : isRead === 'false' ? false : undefined,
       });
 
