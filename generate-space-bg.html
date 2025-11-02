@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate Space Background</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #000511;
+      color: #fff;
+    }
+    button {
+      background: #00BFA5;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 8px;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #00897B;
+    }
+    #preview {
+      max-width: 100%;
+      margin: 20px 0;
+      border: 2px solid #00BFA5;
+      border-radius: 8px;
+    }
+    .status {
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(0, 191, 165, 0.1);
+      border-left: 4px solid #00BFA5;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Generate 4K Space Background</h1>
+  <p>This tool generates a photo-real 4K Milky Way + teal nebula composite with 6000 stars.</p>
+  
+  <button id="generateBtn">Generate Background</button>
+  <button id="downloadBtn" disabled>Download WebP</button>
+  
+  <div id="status" class="status" style="display: none;"></div>
+  <img id="preview" style="display: none;" alt="Preview" />
+
+  <script type="module">
+    import { generateSpaceBackground, downloadSpaceBackground } from './src/utils/generateSpaceBackground.ts';
+
+    const generateBtn = document.getElementById('generateBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const statusDiv = document.getElementById('status');
+    const preview = document.getElementById('preview');
+    let currentBlob = null;
+
+    generateBtn.addEventListener('click', async () => {
+      try {
+        statusDiv.style.display = 'block';
+        statusDiv.textContent = 'Generating 4K space background... This may take a moment.';
+        generateBtn.disabled = true;
+
+        const blob = await generateSpaceBackground();
+        currentBlob = blob;
+
+        const url = URL.createObjectURL(blob);
+        preview.src = url;
+        preview.style.display = 'block';
+
+        const sizeKB = (blob.size / 1024).toFixed(2);
+        statusDiv.textContent = `✓ Generated! Size: ${sizeKB} KB (${blob.size < 200 * 1024 ? 'within target' : 'may need compression'})`;
+        
+        downloadBtn.disabled = false;
+        generateBtn.disabled = false;
+      } catch (error) {
+        statusDiv.textContent = `✗ Error: ${error.message}`;
+        generateBtn.disabled = false;
+      }
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      if (currentBlob) {
+        downloadSpaceBackground(currentBlob);
+        statusDiv.textContent = '✓ Downloaded! Save to /public/images/space-bg.webp';
+      }
+    });
+  </script>
+</body>
+</html>
