@@ -53,18 +53,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     password: string;
     name: string;
   }) => {
-    try {
-      const response = await api.register(data);
-      setUser(response.user);
-      toast.success('Registration successful');
-      navigate('/');
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error && 'response' in error 
-        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message 
-        : undefined;
-      toast.error(errorMessage || 'Registration failed');
-      throw error;
-    }
+    const response = await api.register(data);
+    setUser(response.user);
+    navigate('/dashboard');
   };
 
   const logout = async () => {

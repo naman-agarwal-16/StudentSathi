@@ -18,13 +18,18 @@ export class AuthService {
   }
 
   async register(data: RegisterDto): Promise<AuthResponseDto> {
+    // Validate password length
+    if (data.password.length < 8) {
+      throw new Error('Password must be at least 8 characters');
+    }
+
     // Check if user already exists
     const existingUser = await this.prisma.user.findUnique({
       where: { email: data.email },
     });
 
     if (existingUser) {
-      throw new Error('Email already registered');
+      throw new Error('Email already used');
     }
 
     // Hash password

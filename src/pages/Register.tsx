@@ -5,7 +5,6 @@ import { SpaceButton as Button } from '@/components/ui/space-button';
 import { SpaceInput as Input } from '@/components/ui/space-input';
 import { Label } from '@/components/ui/label';
 import { SpaceCard as Card, SpaceCardContent as CardContent, SpaceCardDescription as CardDescription, SpaceCardHeader as CardHeader, SpaceCardTitle as CardTitle } from '@/components/ui/space-card';
-import { toast } from 'sonner';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -13,18 +12,20 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage('');
 
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
+      setErrorMessage('Passwords do not match');
       return;
     }
 
     if (password.length < 8) {
-      toast.error('Password must be at least 8 characters');
+      setErrorMessage('Password must be at least 8 characters');
       return;
     }
 
@@ -32,8 +33,11 @@ const Register = () => {
 
     try {
       await register({ email, password, name });
-    } catch (error) {
-      // Error handled by useAuth
+    } catch (error: unknown) {
+      const message = error instanceof Error && 'response' in error 
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message 
+        : undefined;
+      setErrorMessage(message || 'Registration failed');
     } finally {
       setIsLoading(false);
     }
@@ -61,6 +65,11 @@ const Register = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {errorMessage && (
+              <div className="text-red-500 text-sm text-center p-2 rounded bg-red-50 dark:bg-red-950/30">
+                {errorMessage}
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
               <Input
