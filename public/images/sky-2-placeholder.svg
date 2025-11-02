@@ -1,0 +1,87 @@
+<svg width="3840" height="2160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Teal Nebula NGC 7027 Simulation -->
+    <radialGradient id="nebulaCore" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#ccfbf1;stop-opacity:0.9" />
+      <stop offset="10%" style="stop-color:#5eead4;stop-opacity:0.8" />
+      <stop offset="25%" style="stop-color:#2dd4bf;stop-opacity:0.7" />
+      <stop offset="40%" style="stop-color:#14b8a6;stop-opacity:0.5" />
+      <stop offset="55%" style="stop-color:#0d9488;stop-opacity:0.3" />
+      <stop offset="70%" style="stop-color:#0f766e;stop-opacity:0.2" />
+      <stop offset="85%" style="stop-color:#115e59;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#042f2e;stop-opacity:0" />
+    </radialGradient>
+    
+    <radialGradient id="nebulaOuter" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#99f6e4;stop-opacity:0.4" />
+      <stop offset="30%" style="stop-color:#5eead4;stop-opacity:0.3" />
+      <stop offset="60%" style="stop-color:#14b8a6;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:#042f2e;stop-opacity:0" />
+    </radialGradient>
+    
+    <radialGradient id="gasCloud1" cx="35%" cy="45%">
+      <stop offset="0%" style="stop-color:#5eead4;stop-opacity:0.6" />
+      <stop offset="50%" style="stop-color:#0d9488;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#042f2e;stop-opacity:0" />
+    </radialGradient>
+    
+    <radialGradient id="gasCloud2" cx="65%" cy="55%">
+      <stop offset="0%" style="stop-color:#ccfbf1;stop-opacity:0.5" />
+      <stop offset="50%" style="stop-color:#14b8a6;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#042f2e;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- Nebula texture filter -->
+    <filter id="nebulaTexture">
+      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="5" seed="10"/>
+      <feColorMatrix type="saturate" values="0.3"/>
+      <feBlend mode="screen" in2="SourceGraphic"/>
+    </filter>
+    
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="20" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Deep teal space background -->
+  <rect width="3840" height="2160" fill="#042f2e"/>
+  
+  <!-- Large nebula outer glow -->
+  <ellipse cx="1920" cy="1080" rx="1500" ry="1200" fill="url(#nebulaOuter)" filter="url(#glow)"/>
+  
+  <!-- Main nebula core -->
+  <ellipse cx="1920" cy="1080" rx="900" ry="700" fill="url(#nebulaCore)" filter="url(#glow)"/>
+  
+  <!-- Gas clouds -->
+  <ellipse cx="1350" cy="970" rx="600" ry="450" fill="url(#gasCloud1)" opacity="0.8"/>
+  <ellipse cx="2490" cy="1190" rx="550" ry="400" fill="url(#gasCloud2)" opacity="0.7"/>
+  
+  <!-- Nebula texture overlay -->
+  <rect width="3840" height="2160" filter="url(#nebulaTexture)" opacity="0.25"/>
+  
+  <!-- Bright teal stars -->
+  <circle cx="600" cy="400" r="2.5" fill="#ccfbf1" opacity="0.95" filter="url(#glow)"/>
+  <circle cx="950" cy="700" r="2" fill="#5eead4" opacity="0.9"/>
+  <circle cx="1300" cy="350" r="1.5" fill="#99f6e4" opacity="0.85"/>
+  <circle cx="1750" cy="850" r="2" fill="#ccfbf1" opacity="0.9"/>
+  <circle cx="2200" cy="500" r="2.5" fill="#5eead4" opacity="0.95" filter="url(#glow)"/>
+  <circle cx="2650" cy="1000" r="1.5" fill="#99f6e4" opacity="0.85"/>
+  <circle cx="3100" cy="650" r="2" fill="#ccfbf1" opacity="0.9"/>
+  <circle cx="3400" cy="1300" r="1.5" fill="#5eead4" opacity="0.85"/>
+  <circle cx="800" cy="1550" r="2" fill="#99f6e4" opacity="0.9"/>
+  <circle cx="1500" cy="1750" r="2.5" fill="#ccfbf1" opacity="0.95" filter="url(#glow)"/>
+  <circle cx="2400" cy="1650" r="2" fill="#5eead4" opacity="0.9"/>
+  <circle cx="3200" cy="1900" r="1.5" fill="#99f6e4" opacity="0.85"/>
+  
+  <!-- Additional small stars -->
+  <circle cx="450" cy="250" r="1" fill="#ffffff" opacity="0.6"/>
+  <circle cx="1100" cy="550" r="1" fill="#ffffff" opacity="0.5"/>
+  <circle cx="1900" cy="300" r="1" fill="#ffffff" opacity="0.6"/>
+  <circle cx="2800" cy="750" r="1" fill="#ffffff" opacity="0.5"/>
+  <circle cx="3500" cy="450" r="1" fill="#ffffff" opacity="0.6"/>
+</svg>

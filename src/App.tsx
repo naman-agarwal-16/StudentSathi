@@ -7,6 +7,7 @@ import { lazy, Suspense } from "react";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./hooks/useAuth";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { SpaceLayout } from "./components/SpaceLayout";
 
 // Lazy load pages for better initial load performance
 const NightSkyLanding = lazy(() => import("./pages/NightSkyLanding"));
@@ -42,13 +43,23 @@ const App = () => (
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
               <Route path="/" element={<NightSkyLanding />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={
+                <SpaceLayout>
+                  <Login />
+                </SpaceLayout>
+              } />
+              <Route path="/register" element={
+                <SpaceLayout>
+                  <Register />
+                </SpaceLayout>
+              } />
               <Route
                 path="/dashboard"
                 element={
                   <ProtectedRoute>
-                    <Index />
+                    <SpaceLayout>
+                      <Index />
+                    </SpaceLayout>
                   </ProtectedRoute>
                 }
               />

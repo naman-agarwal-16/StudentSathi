@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { SpaceButton as Button } from '@/components/ui/space-button';
+import { SpaceInput as Input } from '@/components/ui/space-input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SpaceCard as Card, SpaceCardContent as CardContent, SpaceCardDescription as CardDescription, SpaceCardHeader as CardHeader, SpaceCardTitle as CardTitle } from '@/components/ui/space-card';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -26,11 +26,17 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-12 h-12 rounded-lg gradient-primary flex items-center justify-center">
+            <div 
+              className="w-12 h-12 rounded-lg flex items-center justify-center"
+              style={{
+                background: 'linear-gradient(135deg, #0f766e, #00BFA5)',
+                boxShadow: '0 0 20px rgba(0, 191, 165, 0.4)',
+              }}
+            >
               <span className="text-white font-bold text-xl">S</span>
             </div>
           </div>
