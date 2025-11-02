@@ -1,5 +1,5 @@
-import { useEffect, useRef, useMemo } from 'react';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { useEffect, useRef, useMemo, useState } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion, useSpring } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,29 +28,39 @@ const NightSkyLanding = () => {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [particlePositions, setParticlePositions] = useState<{x: number; y: number}[]>([]);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
   });
 
-  // Parallax transformations with reduced motion support
-  const yStars = useTransform(
+  // Parallax transformations with spring physics for smooth 60fps motion
+  const yStarsRaw = useTransform(
     scrollYProgress,
     [0, 1],
-    prefersReducedMotion ? [0, 0] : [0, -300]
+    prefersReducedMotion ? [0, 0] : [0, -240]
   );
+  const yStars = useSpring(yStarsRaw, { stiffness: 100, damping: 30, restDelta: 0.001 });
   
-  const yNebula = useTransform(
+  const yNebulaRaw = useTransform(
     scrollYProgress,
     [0, 1],
-    prefersReducedMotion ? [0, 0] : [0, -150]
+    prefersReducedMotion ? [0, 0] : [0, -120]
   );
+  const yNebula = useSpring(yNebulaRaw, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
   const titleScale = useTransform(
     scrollYProgress,
     [0, 0.5],
-    [1, 0.8]
+    [1, 0.95]
+  );
+
+  const titleY = useTransform(
+    scrollYProgress,
+    [0, 0.5],
+    [0, 100]
   );
 
   const titleOpacity = useTransform(
@@ -64,6 +74,37 @@ const NightSkyLanding = () => {
 
   // Memoize RGB values for gradient
   const darkerRgb = useMemo(() => hexToRgb(TEAL_COLORS.darker), []);
+
+  // Preload images with cleanup
+  useEffect(() => {
+    const img1 = new Image();
+    const img2 = new Image();
+    let loadedCount = 0;
+    let isMounted = true;
+    
+    const checkLoaded = () => {
+      loadedCount++;
+      if (loadedCount === 2 && isMounted) {
+        setImagesLoaded(true);
+      }
+    };
+    
+    img1.onload = checkLoaded;
+    img2.onload = checkLoaded;
+    img1.onerror = checkLoaded; // Still set loaded even on error to prevent blocking
+    img2.onerror = checkLoaded;
+    
+    img1.src = '/images/sky-1-placeholder.svg';
+    img2.src = '/images/sky-2-placeholder.svg';
+    
+    return () => {
+      isMounted = false;
+      img1.onload = null;
+      img2.onload = null;
+      img1.onerror = null;
+      img2.onerror = null;
+    };
+  }, []);
 
   // Cleanup: unload layers after scroll-end
   useEffect(() => {
@@ -82,6 +123,19 @@ const NightSkyLanding = () => {
     };
   }, []);
 
+  // Generate particles on button hover
+  const handleButtonHover = () => {
+    if (prefersReducedMotion) return;
+    const particles: {x: number; y: number}[] = [];
+    for (let i = 0; i < 6; i++) {
+      particles.push({
+        x: Math.random() * 100 - 50,
+        y: Math.random() * 100 - 50,
+      });
+    }
+    setParticlePositions(particles);
+  };
+
   return (
     <div 
       ref={containerRef}
@@ -90,69 +144,60 @@ const NightSkyLanding = () => {
         scrollSnapType: 'y mandatory',
       }}
     >
-      {/* Background Layer: Gradient-based Night Sky */}
+      {/* Back Layer: Milky Way Core - scaled 110%, blurred 40px, screen blend */}
       <motion.div 
         className="fixed inset-0 z-0"
-        style={{ y: yNebula }}
+        style={{ y: yStars }}
       >
-        {/* Deep space gradient base layer */}
         <div
           className="absolute inset-0"
           style={{
-            background: `
-              radial-gradient(ellipse at 20% 50%, rgba(15, 118, 110, 0.15) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 30%, rgba(20, 184, 166, 0.1) 0%, transparent 50%),
-              radial-gradient(ellipse at 50% 80%, rgba(17, 94, 89, 0.12) 0%, transparent 50%),
-              linear-gradient(180deg, #0a0e1a 0%, #111827 30%, #0f1419 60%, #0a0e1a 100%)
-            `,
-            mixBlendMode: 'normal',
-          }}
-        />
-        
-        {/* Nebula-like second layer with screen blend */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `
-              radial-gradient(circle at 30% 40%, rgba(94, 234, 212, 0.08) 0%, transparent 40%),
-              radial-gradient(circle at 70% 60%, rgba(45, 212, 191, 0.06) 0%, transparent 40%),
-              radial-gradient(circle at 50% 20%, rgba(15, 118, 110, 0.1) 0%, transparent 35%),
-              radial-gradient(ellipse at 40% 70%, rgba(20, 184, 166, 0.05) 0%, transparent 50%)
-            `,
+            backgroundImage: 'url(/images/sky-1-placeholder.svg)',
+            backgroundSize: '110%',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            filter: 'blur(40px)',
             mixBlendMode: 'screen',
-          }}
-        />
-
-        {/* Milky way dust simulation with mask */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `
-              linear-gradient(135deg, 
-                rgba(94, 234, 212, 0.03) 0%, 
-                rgba(20, 184, 166, 0.05) 20%,
-                rgba(15, 118, 110, 0.04) 40%,
-                transparent 60%,
-                rgba(17, 94, 89, 0.06) 80%,
-                rgba(94, 234, 212, 0.03) 100%
-              )
-            `,
-            mixBlendMode: 'screen',
-            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%)',
-          }}
-        />
-
-        {/* Final teal accent layer */}
-        <div 
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(180deg, rgba(17, 24, 39, 0.95) 0%, rgba(${darkerRgb.r}, ${darkerRgb.g}, ${darkerRgb.b}, 0.3) 50%, rgba(17, 24, 39, 0.95) 100%)`,
+            transform: 'scale(1.1)',
+            opacity: imagesLoaded ? 1 : 0,
+            transition: 'opacity 0.5s ease-in',
           }}
         />
       </motion.div>
 
-      {/* Stars Layer */}
+      {/* Front Layer: Teal Nebula NGC 7027 - 100% scale, 0.7 opacity, radial mask */}
+      <motion.div 
+        className="fixed inset-0 z-[1]"
+        style={{ y: yNebula }}
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: 'url(/images/sky-2-placeholder.svg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: imagesLoaded ? 0.7 : 0,
+            transition: 'opacity 0.5s ease-in',
+            maskImage: 'radial-gradient(ellipse at center, black 60%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at center, black 60%, transparent 100%)',
+          }}
+        />
+      </motion.div>
+
+      {/* Additional deep space gradient overlay for depth */}
+      <div 
+        className="fixed inset-0 z-[2] pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(ellipse at 20% 50%, rgba(15, 118, 110, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 30%, rgba(20, 184, 166, 0.06) 0%, transparent 50%),
+            linear-gradient(180deg, rgba(10, 14, 26, 0.3) 0%, transparent 30%, rgba(10, 14, 26, 0.5) 100%)
+          `,
+        }}
+      />
+
+      {/* Stars Layer with 200 CSS stars */}
       <motion.div
         className="fixed inset-0 z-10 pointer-events-none"
         style={{ y: yStars }}
@@ -165,7 +210,7 @@ const NightSkyLanding = () => {
         </div>
       </motion.div>
 
-      {/* Section 1: Hero Title Card */}
+      {/* Section 1: Hero Title Card with glass morphism and scroll animations */}
       <section 
         className="relative min-h-screen flex items-center justify-center z-20"
         style={{ scrollSnapAlign: 'start' }}
@@ -173,6 +218,7 @@ const NightSkyLanding = () => {
         <motion.div
           style={{ 
             scale: titleScale,
+            y: titleY,
             opacity: titleOpacity 
           }}
           className="text-center px-6 max-w-4xl"
@@ -251,20 +297,43 @@ const NightSkyLanding = () => {
             and comprehensive learning analytics that illuminate the path to success.
           </p>
           
-          {/* CTA Button with star-field hover */}
-          <Button
-            onClick={() => navigate('/login')}
-            className="star-field-button w-full md:w-auto px-8 py-6 text-lg font-semibold transition-all duration-300"
-            style={{
-              background: `linear-gradient(135deg, ${TEAL_COLORS.dark}, ${TEAL_COLORS.primary})`,
-              border: `2px solid ${TEAL_COLORS.primary}`,
-              color: 'white',
-              borderRadius: '12px',
-              boxShadow: `0 0 20px ${TEAL_COLORS.primary}60`,
-            }}
-          >
-            Explore the Platform
-          </Button>
+          {/* CTA Button with star-field hover and particle burst */}
+          <div className="relative inline-block">
+            <Button
+              onClick={() => navigate('/login')}
+              onMouseEnter={handleButtonHover}
+              className="star-field-button w-full md:w-auto px-8 py-6 text-lg font-semibold transition-all duration-300"
+              style={{
+                background: `linear-gradient(135deg, ${TEAL_COLORS.dark}, ${TEAL_COLORS.primary})`,
+                border: `2px solid ${TEAL_COLORS.primary}`,
+                color: 'white',
+                borderRadius: '12px',
+                boxShadow: `0 0 20px ${TEAL_COLORS.primary}60`,
+              }}
+            >
+              Explore the Platform
+            </Button>
+            
+            {/* Particle burst on hover */}
+            {!prefersReducedMotion && particlePositions.map((pos, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                animate={{ 
+                  x: pos.x, 
+                  y: pos.y, 
+                  opacity: 0,
+                  scale: 0
+                }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full pointer-events-none"
+                style={{
+                  background: TEAL_COLORS.glow,
+                  boxShadow: `0 0 10px ${TEAL_COLORS.primary}`,
+                }}
+              />
+            ))}
+          </div>
         </motion.div>
       </section>
 
@@ -328,7 +397,7 @@ const NightSkyLanding = () => {
       </section>
 
       <style>{`
-        /* Stars with box-shadow and twinkling animation */
+        /* 200 CSS stars with box-shadow, twinkle 4s infinite + 0.2 deg/s hue-rotate drift */
         .stars-container {
           width: 100%;
           height: 100%;
@@ -343,7 +412,7 @@ const NightSkyLanding = () => {
           width: 2px;
           height: 2px;
           background: transparent;
-          animation: twinkle 4s ease-in-out infinite, hue-drift 8s linear infinite;
+          animation: twinkle 4s ease-in-out infinite, hue-drift 1800s linear infinite;
         }
 
         @keyframes twinkle {
@@ -351,6 +420,7 @@ const NightSkyLanding = () => {
           50% { opacity: 0.3; transform: scale(0.8); }
         }
 
+        /* 0.2 deg/s = 360deg / 1800s */
         @keyframes hue-drift {
           0% { filter: hue-rotate(0deg); }
           100% { filter: hue-rotate(360deg); }

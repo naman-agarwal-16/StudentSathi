@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { SpaceCard as Card, SpaceCardContent as CardContent, SpaceCardHeader as CardHeader, SpaceCardTitle as CardTitle } from '@/components/ui/space-card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Users, TrendingUp, AlertTriangle, BookOpen } from 'lucide-react';
@@ -102,24 +102,41 @@ export const OverviewTab = () => {
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
               <AreaChart data={weeklyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="week" />
-                <YAxis />
-                <Tooltip />
+                <defs>
+                  <linearGradient id="engagementGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#00BFA5" stopOpacity={0.8}/>
+                    <stop offset="100%" stopColor="#004D40" stopOpacity={0.3}/>
+                  </linearGradient>
+                  <linearGradient id="attendanceGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#14b8a6" stopOpacity={0.7}/>
+                    <stop offset="100%" stopColor="#0f766e" stopOpacity={0.2}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 191, 165, 0.1)" />
+                <XAxis dataKey="week" stroke="#5eead4" />
+                <YAxis stroke="#5eead4" />
+                <Tooltip 
+                  contentStyle={{
+                    background: 'rgba(0, 77, 64, 0.9)',
+                    border: '1px solid #00BFA5',
+                    borderRadius: '8px',
+                    backdropFilter: 'blur(12px)',
+                  }}
+                />
                 <Area 
                   type="monotone" 
                   dataKey="engagement" 
                   stackId="1" 
-                  stroke="hsl(var(--primary))" 
-                  fill="hsl(var(--primary-light))" 
+                  stroke="#00BFA5" 
+                  fill="url(#engagementGradient)" 
                   name="Engagement %"
                 />
                 <Area 
                   type="monotone" 
                   dataKey="attendance" 
                   stackId="2" 
-                  stroke="hsl(var(--secondary))" 
-                  fill="hsl(var(--secondary-light))" 
+                  stroke="#14b8a6" 
+                  fill="url(#attendanceGradient)" 
                   name="Attendance %"
                 />
               </AreaChart>
