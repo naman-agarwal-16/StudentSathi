@@ -37,11 +37,14 @@ export class AuthController {
         accessToken: result.accessToken,
       });
     } catch (error) {
-      logger.error('Registration error:', error);
-      const message = error instanceof Error ? error.message : 'Registration failed';
+      // Log error with both Winston and console
+      const errorMessage = error instanceof Error ? error.message : 'Registration failed';
+      logger.error('Registration error:', { error: errorMessage, email: req.body?.email });
+      console.error('Registration error:', errorMessage, { email: req.body?.email });
+      
       res.status(400).json({
         error: 'Registration failed',
-        message,
+        message: errorMessage,
       });
     }
   };
