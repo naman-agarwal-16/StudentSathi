@@ -51,3 +51,6 @@ Thumbs.db
 *.temp
 .cache
 .env.local
+
+# Generated assets (can be regenerated with generate-space-bg.cjs)
+generate-space-bg.html
