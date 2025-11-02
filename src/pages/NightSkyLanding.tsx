@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -12,10 +12,21 @@ const TEAL_COLORS = {
   glow: '#5eead4',       // teal-300
 };
 
+// Helper function to convert hex to RGB values
+const hexToRgb = (hex: string): { r: number; g: number; b: number } => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : { r: 0, g: 0, b: 0 };
+};
+
 const NightSkyLanding = () => {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   
   const { scrollYProgress } = useScroll({
@@ -48,16 +59,18 @@ const NightSkyLanding = () => {
     [1, 0]
   );
 
-  // Images are loaded immediately for gradient-based backgrounds
-  useEffect(() => {
-    // Set loaded immediately since we're using CSS gradients
-    setImagesLoaded(true);
+  // Memoize star field generation to avoid recalculating on every render
+  const starsBoxShadow = useMemo(() => generateStars(200, TEAL_COLORS), []);
 
-    // Cleanup: unload layers after scroll-end
-    let scrollTimeout: NodeJS.Timeout;
+  // Memoize RGB values for gradient
+  const darkerRgb = useMemo(() => hexToRgb(TEAL_COLORS.darker), []);
+
+  // Cleanup: unload layers after scroll-end
+  useEffect(() => {
+    let scrollTimeout: number;
     const handleScroll = () => {
       clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
+      scrollTimeout = window.setTimeout(() => {
         // Layers can be unloaded here for performance if needed
       }, 1000);
     };
@@ -134,7 +147,7 @@ const NightSkyLanding = () => {
         <div 
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(180deg, rgba(17, 24, 39, 0.95) 0%, rgba(${parseInt(TEAL_COLORS.darker.slice(1, 3), 16)}, ${parseInt(TEAL_COLORS.darker.slice(3, 5), 16)}, ${parseInt(TEAL_COLORS.darker.slice(5, 7), 16)}, 0.3) 50%, rgba(17, 24, 39, 0.95) 100%)`,
+            background: `linear-gradient(180deg, rgba(17, 24, 39, 0.95) 0%, rgba(${darkerRgb.r}, ${darkerRgb.g}, ${darkerRgb.b}, 0.3) 50%, rgba(17, 24, 39, 0.95) 100%)`,
           }}
         />
       </motion.div>
@@ -144,7 +157,12 @@ const NightSkyLanding = () => {
         className="fixed inset-0 z-10 pointer-events-none"
         style={{ y: yStars }}
       >
-        <div className="stars-container" />
+        <div className="stars-container">
+          <div 
+            className="stars-pseudo"
+            style={{ boxShadow: starsBoxShadow }}
+          />
+        </div>
       </motion.div>
 
       {/* Section 1: Hero Title Card */}
@@ -309,19 +327,6 @@ const NightSkyLanding = () => {
         </motion.div>
       </section>
 
-      {/* Loading Indicator */}
-      {!imagesLoaded && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900">
-          <div className="text-center">
-            <div 
-              className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 mx-auto mb-4"
-              style={{ borderColor: TEAL_COLORS.primary }}
-            />
-            <p style={{ color: TEAL_COLORS.light }}>Loading the cosmos...</p>
-          </div>
-        </div>
-      )}
-
       <style>{`
         /* Stars with box-shadow and twinkling animation */
         .stars-container {
@@ -331,15 +336,13 @@ const NightSkyLanding = () => {
           position: relative;
         }
 
-        .stars-container::before {
-          content: '';
+        .stars-pseudo {
           position: absolute;
           top: 0;
           left: 0;
           width: 2px;
           height: 2px;
           background: transparent;
-          box-shadow: ${generateStars(200, TEAL_COLORS)};
           animation: twinkle 4s ease-in-out infinite, hue-drift 8s linear infinite;
         }
 
