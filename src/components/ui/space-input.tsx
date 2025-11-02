@@ -2,7 +2,10 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 export interface SpaceInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {}
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onFocus' | 'onBlur'> {
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+}
 
 const SpaceInput = React.forwardRef<HTMLInputElement, SpaceInputProps>(
   ({ className, type, ...props }, ref) => {

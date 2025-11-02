@@ -14,6 +14,7 @@ const NightSkyLanding = lazy(() => import("./pages/NightSkyLanding"));
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
+const Demo = lazy(() => import("./pages/Demo"));
 
 // Optimize QueryClient with caching and stale time settings
 const queryClient = new QueryClient({
@@ -43,6 +44,7 @@ const App = () => (
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
               <Route path="/" element={<NightSkyLanding />} />
+              <Route path="/demo" element={<Demo />} />
               <Route path="/login" element={
                 <SpaceLayout>
                   <Login />
