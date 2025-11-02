@@ -26,6 +26,7 @@ export class ParticleSystem {
   private targetFPS: number = 60;
   private lastFrameTime: number = 0;
   private frameInterval: number;
+  private handleResize: () => void;
 
   constructor(canvas: HTMLCanvasElement, isLowEndDevice: boolean = false) {
     this.canvas = canvas;
@@ -35,8 +36,13 @@ export class ParticleSystem {
     this.frameInterval = 1000 / this.targetFPS;
     this.resizeCanvas();
     
-    window.addEventListener('resize', () => this.resizeCanvas());
+    this.handleResize = this.handleResize.bind(this);
+    window.addEventListener('resize', this.handleResize);
   }
+
+  private handleResize = (): void => {
+    this.resizeCanvas();
+  };
 
   private resizeCanvas(): void {
     this.canvas.width = window.innerWidth;
@@ -236,7 +242,7 @@ export class ParticleSystem {
 
   destroy(): void {
     this.stop();
-    window.removeEventListener('resize', () => this.resizeCanvas());
+    window.removeEventListener('resize', this.handleResize);
     this.particles = [];
   }
 }

@@ -126,10 +126,15 @@ sharp(pngPath)
     console.log(`✓ Converted to WebP: ${webpSizeKB} KB (${info.size < 200 * 1024 ? 'within target!' : 'needs more compression'})`);
     console.log(`  Saved to: ${webpPath}`);
     
-    // Optionally delete PNG to save space
-    fs.unlinkSync(pngPath);
-    console.log(`  Cleaned up PNG file`);
+    // Delete PNG only after successful WebP conversion
+    try {
+      fs.unlinkSync(pngPath);
+      console.log(`  Cleaned up PNG file`);
+    } catch (err) {
+      console.warn(`  Warning: Could not delete PNG file: ${err.message}`);
+    }
   })
   .catch(err => {
     console.error('Error converting to WebP:', err);
+    console.log(`  PNG file retained at: ${pngPath}`);
   });
