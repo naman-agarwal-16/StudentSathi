@@ -10,7 +10,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { SpaceLayout } from "./components/SpaceLayout";
 
 // Lazy load pages for better initial load performance
-const NightSkyLanding = lazy(() => import("./pages/NightSkyLanding"));
+const MinimalNightSkyLanding = lazy(() => import("./pages/MinimalNightSkyLanding"));
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -43,7 +43,7 @@ const App = () => (
         <AuthProvider>
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
-              <Route path="/" element={<NightSkyLanding />} />
+              <Route path="/" element={<MinimalNightSkyLanding />} />
               <Route path="/demo" element={<Demo />} />
               <Route path="/login" element={
                 <SpaceLayout>

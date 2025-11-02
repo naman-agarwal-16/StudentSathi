@@ -1,6 +1,7 @@
 /**
  * Node.js script to generate 4K space background using canvas
  * Run: node generate-space-bg.cjs
+ * Specifications: 6000 white stars (1-3px), soft teal nebula, < 200KB WebP
  */
 
 const { createCanvas } = require('canvas');
@@ -12,78 +13,44 @@ const path = require('path');
 const canvas = createCanvas(3840, 2160);
 const ctx = canvas.getContext('2d');
 
-// Base: Deep space black with slight blue tint
-ctx.fillStyle = '#000511';
+// Base: Deep space black
+ctx.fillStyle = '#000000';
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-// Draw nebula gradient (teal theme)
+// Draw soft teal nebula gradient
 function drawNebula() {
-  const nebulae = [
-    { x: canvas.width * 0.3, y: canvas.height * 0.4, radius: 800, color: '#004D40' },
-    { x: canvas.width * 0.7, y: canvas.height * 0.6, radius: 700, color: '#00695C' },
-    { x: canvas.width * 0.5, y: canvas.height * 0.3, radius: 600, color: '#00897B' },
-    { x: canvas.width * 0.2, y: canvas.height * 0.7, radius: 500, color: '#00796B' },
-  ];
+  // Main teal nebula - soft and subtle
+  const nebula = ctx.createRadialGradient(
+    canvas.width * 0.5,
+    canvas.height * 0.5,
+    0,
+    canvas.width * 0.5,
+    canvas.height * 0.5,
+    Math.max(canvas.width, canvas.height) * 0.6
+  );
+  
+  nebula.addColorStop(0, hexToRgba('#00796B', 0.15));
+  nebula.addColorStop(0.3, hexToRgba('#004D40', 0.08));
+  nebula.addColorStop(0.6, hexToRgba('#00695C', 0.04));
+  nebula.addColorStop(1, 'transparent');
 
-  nebulae.forEach((nebula) => {
-    const gradient = ctx.createRadialGradient(
-      nebula.x,
-      nebula.y,
-      0,
-      nebula.x,
-      nebula.y,
-      nebula.radius
-    );
-    
-    gradient.addColorStop(0, hexToRgba(nebula.color, 0.67));
-    gradient.addColorStop(0.3, hexToRgba(nebula.color, 0.40));
-    gradient.addColorStop(0.6, hexToRgba(nebula.color, 0.20));
-    gradient.addColorStop(1, 'transparent');
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  });
-
-  // Add some brighter teal accents
-  const accents = [
-    { x: canvas.width * 0.4, y: canvas.height * 0.5, radius: 400, color: '#26A69A' },
-    { x: canvas.width * 0.6, y: canvas.height * 0.4, radius: 350, color: '#4DB6AC' },
-  ];
-
-  accents.forEach((accent) => {
-    const gradient = ctx.createRadialGradient(
-      accent.x,
-      accent.y,
-      0,
-      accent.x,
-      accent.y,
-      accent.radius
-    );
-    
-    gradient.addColorStop(0, hexToRgba(accent.color, 0.27));
-    gradient.addColorStop(0.5, hexToRgba(accent.color, 0.13));
-    gradient.addColorStop(1, 'transparent');
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  });
+  ctx.fillStyle = nebula;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-// Draw 6000 random stars (1px white)
+// Draw 6000 random stars (1-3px white with random brightness)
 function drawRandomStars() {
-  ctx.fillStyle = '#FFFFFF';
-  
   for (let i = 0; i < 6000; i++) {
     const x = Math.random() * canvas.width;
     const y = Math.random() * canvas.height;
+    // Size distribution: 95% are 1px, 4% are 2px, 1% are 3px
     const size = Math.random() < 0.95 ? 1 : Math.random() < 0.98 ? 2 : 3;
-    const alpha = 0.4 + Math.random() * 0.6; // Vary brightness
+    // Random brightness between 0.3 and 1.0
+    const alpha = 0.3 + Math.random() * 0.7;
     
-    ctx.globalAlpha = alpha;
+    ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
     ctx.fillRect(Math.floor(x), Math.floor(y), size, size);
   }
-  
-  ctx.globalAlpha = 1;
 }
 
 function hexToRgba(hex, alpha) {
@@ -117,13 +84,14 @@ fs.writeFileSync(pngPath, buffer);
 const pngSizeKB = (buffer.length / 1024).toFixed(2);
 console.log(`✓ Generated PNG: ${pngSizeKB} KB`);
 
-// Convert to WebP with compression
+// Convert to WebP with compression targeting < 200KB
 sharp(pngPath)
-  .webp({ quality: 85, effort: 6 })
+  .webp({ quality: 80, effort: 6 })
   .toFile(webpPath)
   .then(info => {
     const webpSizeKB = (info.size / 1024).toFixed(2);
-    console.log(`✓ Converted to WebP: ${webpSizeKB} KB (${info.size < 200 * 1024 ? 'within target!' : 'needs more compression'})`);
+    const isWithinTarget = info.size < 200 * 1024;
+    console.log(`✓ Converted to WebP: ${webpSizeKB} KB ${isWithinTarget ? '(within 200KB target!)' : '(needs more compression)'}`);
     console.log(`  Saved to: ${webpPath}`);
     
     // Delete PNG only after successful WebP conversion
