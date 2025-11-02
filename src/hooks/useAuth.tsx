@@ -53,13 +53,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     password: string;
     name: string;
   }) => {
-    try {
-      const response = await api.register(data);
-      setUser(response.user);
-      navigate('/dashboard');
-    } catch (error: unknown) {
-      throw error;
-    }
+    const response = await api.register(data);
+    setUser(response.user);
+    navigate('/dashboard');
   };
 
   const logout = async () => {
