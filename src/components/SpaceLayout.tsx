@@ -22,6 +22,7 @@ export const SpaceLayout = ({ children }: SpaceLayoutProps) => {
           backgroundRepeat: 'no-repeat',
           zIndex: -2,
           animation: 'space-drift 200s linear infinite',
+          willChange: 'transform',
         }}
       />
 

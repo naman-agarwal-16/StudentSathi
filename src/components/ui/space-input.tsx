@@ -8,7 +8,7 @@ export interface SpaceInputProps
 }
 
 const SpaceInput = React.forwardRef<HTMLInputElement, SpaceInputProps>(
-  ({ className, type, ...props }, ref) => {
+  ({ className, type, onFocus, onBlur, ...props }, ref) => {
     return (
       <input
         type={type}
@@ -24,10 +24,12 @@ const SpaceInput = React.forwardRef<HTMLInputElement, SpaceInputProps>(
         onFocus={(e) => {
           e.currentTarget.style.borderBottom = '2px solid #00BFA5';
           e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 191, 165, 0.3)';
+          onFocus?.(e);
         }}
         onBlur={(e) => {
           e.currentTarget.style.borderBottom = '2px solid rgba(0, 191, 165, 0.3)';
           e.currentTarget.style.boxShadow = 'none';
+          onBlur?.(e);
         }}
         ref={ref}
         {...props}

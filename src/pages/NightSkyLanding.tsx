@@ -75,15 +75,16 @@ const NightSkyLanding = () => {
   // Memoize RGB values for gradient
   const darkerRgb = useMemo(() => hexToRgb(TEAL_COLORS.darker), []);
 
-  // Preload images
+  // Preload images with cleanup
   useEffect(() => {
     const img1 = new Image();
     const img2 = new Image();
     let loadedCount = 0;
+    let isMounted = true;
     
     const checkLoaded = () => {
       loadedCount++;
-      if (loadedCount === 2) {
+      if (loadedCount === 2 && isMounted) {
         setImagesLoaded(true);
       }
     };
@@ -95,6 +96,14 @@ const NightSkyLanding = () => {
     
     img1.src = '/images/sky-1-placeholder.svg';
     img2.src = '/images/sky-2-placeholder.svg';
+    
+    return () => {
+      isMounted = false;
+      img1.onload = null;
+      img2.onload = null;
+      img1.onerror = null;
+      img2.onerror = null;
+    };
   }, []);
 
   // Cleanup: unload layers after scroll-end
@@ -135,10 +144,6 @@ const NightSkyLanding = () => {
         scrollSnapType: 'y mandatory',
       }}
     >
-      {/* Preload hints for images */}
-      <link rel="preload" as="image" href="/images/sky-1-placeholder.svg" />
-      <link rel="preload" as="image" href="/images/sky-2-placeholder.svg" />
-      
       {/* Back Layer: Milky Way Core - scaled 110%, blurred 40px, screen blend */}
       <motion.div 
         className="fixed inset-0 z-0"
