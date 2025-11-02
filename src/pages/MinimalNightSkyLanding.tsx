@@ -33,6 +33,25 @@ const MinimalNightSkyLanding = () => {
     };
   }, []);
 
+  // Button style configuration
+  const buttonStyle = {
+    backgroundColor: '#00796B',
+    color: '#ffffff',
+    borderRadius: '16px',
+    border: 'none',
+    boxShadow: '0 4px 20px rgba(0, 121, 107, 0.3)',
+  };
+
+  const handleButtonHover = (e: React.MouseEvent<HTMLButtonElement>, isEnter: boolean) => {
+    if (isEnter) {
+      e.currentTarget.style.boxShadow = '0 6px 30px rgba(0, 121, 107, 0.6)';
+      e.currentTarget.style.transform = 'translateY(-2px)';
+    } else {
+      e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 121, 107, 0.3)';
+      e.currentTarget.style.transform = 'translateY(0)';
+    }
+  };
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Fixed 4K background with brightness filter and blur mask */}
@@ -90,21 +109,9 @@ const MinimalNightSkyLanding = () => {
             <Button
               onClick={() => navigate('/demo')}
               className="px-8 py-6 text-lg font-semibold transition-all duration-300"
-              style={{
-                backgroundColor: '#00796B',
-                color: '#ffffff',
-                borderRadius: '16px',
-                border: 'none',
-                boxShadow: '0 4px 20px rgba(0, 121, 107, 0.3)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 6px 30px rgba(0, 121, 107, 0.6)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 121, 107, 0.3)';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
+              style={buttonStyle}
+              onMouseEnter={(e) => handleButtonHover(e, true)}
+              onMouseLeave={(e) => handleButtonHover(e, false)}
             >
               Demo
             </Button>
@@ -112,21 +119,9 @@ const MinimalNightSkyLanding = () => {
             <Button
               onClick={() => navigate('/login')}
               className="px-8 py-6 text-lg font-semibold transition-all duration-300"
-              style={{
-                backgroundColor: '#00796B',
-                color: '#ffffff',
-                borderRadius: '16px',
-                border: 'none',
-                boxShadow: '0 4px 20px rgba(0, 121, 107, 0.3)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 6px 30px rgba(0, 121, 107, 0.6)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 121, 107, 0.3)';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
+              style={buttonStyle}
+              onMouseEnter={(e) => handleButtonHover(e, true)}
+              onMouseLeave={(e) => handleButtonHover(e, false)}
             >
               Login / Register
             </Button>

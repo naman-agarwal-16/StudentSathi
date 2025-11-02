@@ -22,6 +22,7 @@ export class ParticleSystem {
   private particles: Particle[] = [];
   private lastSpawnTime: number = 0;
   private animationFrameId: number | null = null;
+  private lastFrameTime: number = 0;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -43,6 +44,7 @@ export class ParticleSystem {
   start(): void {
     if (this.animationFrameId === null) {
       this.lastSpawnTime = Date.now();
+      this.lastFrameTime = Date.now();
       this.animate();
     }
   }
@@ -55,12 +57,16 @@ export class ParticleSystem {
   }
 
   private animate = (): void => {
-    this.update();
+    const now = Date.now();
+    const deltaTime = (now - this.lastFrameTime) / 1000; // Convert to seconds
+    this.lastFrameTime = now;
+
+    this.update(deltaTime);
     this.render();
     this.animationFrameId = requestAnimationFrame(this.animate);
   };
 
-  private update(): void {
+  private update(deltaTime: number): void {
     const now = Date.now();
 
     // Spawn shooting star every 12 seconds
@@ -69,8 +75,7 @@ export class ParticleSystem {
       this.lastSpawnTime = now;
     }
 
-    // Update particles (16ms frame time approximation)
-    const deltaTime = 0.016;
+    // Update particles with actual deltaTime
     this.particles = this.particles.filter((particle) => {
       particle.life -= deltaTime;
       if (particle.life <= 0) return false;
