@@ -9,6 +9,7 @@ import { AuthProvider } from "./hooks/useAuth";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 // Lazy load pages for better initial load performance
+const NightSkyLanding = lazy(() => import("./pages/NightSkyLanding"));
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -40,10 +41,11 @@ const App = () => (
         <AuthProvider>
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
+              <Route path="/" element={<NightSkyLanding />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route
-                path="/"
+                path="/dashboard"
                 element={
                   <ProtectedRoute>
                     <Index />
