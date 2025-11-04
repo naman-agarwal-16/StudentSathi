@@ -182,7 +182,7 @@ const MinimalNightSkyLanding = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, type: 'spring', stiffness: 100, damping: 20 }}
             className="glass-card max-w-3xl p-8 md:p-12"
           >
@@ -205,7 +205,7 @@ const MinimalNightSkyLanding = () => {
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.8 }}
             className="w-full max-w-7xl"
           >
@@ -219,7 +219,7 @@ const MinimalNightSkyLanding = () => {
                     key={event.id}
                     initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: false }}
+                    viewport={{ once: true }}
                     transition={{ delay: idx * 0.1, duration: 0.6 }}
                     onClick={() => navigate('/demo')}
                     className="glass-card-hover w-80 p-6 cursor-pointer"
@@ -257,7 +257,7 @@ const MinimalNightSkyLanding = () => {
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, type: 'spring', stiffness: 80, damping: 20 }}
             className="glass-card max-w-5xl p-8 md:p-12 w-full"
           >
@@ -274,7 +274,7 @@ const MinimalNightSkyLanding = () => {
                   key={idx}
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: false }}
+                  viewport={{ once: true }}
                   transition={{ delay: idx * 0.2, duration: 0.6 }}
                   className="flex flex-col items-center"
                 >
@@ -310,7 +310,7 @@ const MinimalNightSkyLanding = () => {
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 1.5 }}
             className="text-center px-6 max-w-4xl"
           >
@@ -328,7 +328,7 @@ const MinimalNightSkyLanding = () => {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.8 }}
             className="max-w-5xl w-full"
           >
@@ -407,8 +407,10 @@ const MinimalNightSkyLanding = () => {
           display: none;
         }
         
-        html {
-          scroll-behavior: smooth;
+        @media (prefers-reduced-motion: no-preference) {
+          html {
+            scroll-behavior: smooth;
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -419,6 +421,14 @@ const MinimalNightSkyLanding = () => {
             animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important;
           }
+        }
+        
+        /* Fallback for line-clamp-3 if not available */
+        .line-clamp-3 {
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
       `}</style>
     </div>
