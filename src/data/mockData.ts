@@ -255,3 +255,99 @@ export const formatRelativeTime = (timestamp: string): string => {
   if (diffDays < 7) return `${diffDays}d ago`;
   return `${Math.floor(diffDays / 7)}w ago`;
 };
+
+// Events & Workshops
+export interface Event {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  category: 'workshop' | 'seminar' | 'hackathon' | 'webinar';
+  description: string;
+  attendees: number;
+  maxAttendees: number;
+  instructor: string;
+  location: string;
+  thumbnail: string;
+}
+
+export const mockEvents: Event[] = [
+  {
+    id: '1',
+    title: 'AI/ML Workshop: Building Neural Networks',
+    date: '2025-01-15',
+    time: '14:00 - 17:00',
+    category: 'workshop',
+    description: 'Hands-on workshop covering fundamentals of neural networks and deep learning with TensorFlow.',
+    attendees: 45,
+    maxAttendees: 50,
+    instructor: 'Dr. Sarah Mitchell',
+    location: 'Computer Lab A',
+    thumbnail: '🤖'
+  },
+  {
+    id: '2',
+    title: 'Data Science & Analytics Bootcamp',
+    date: '2025-01-18',
+    time: '10:00 - 16:00',
+    category: 'workshop',
+    description: 'Comprehensive bootcamp on data analysis, visualization, and statistical modeling using Python.',
+    attendees: 38,
+    maxAttendees: 40,
+    instructor: 'Prof. James Chen',
+    location: 'Virtual',
+    thumbnail: '📊'
+  },
+  {
+    id: '3',
+    title: 'Web Development Hackathon',
+    date: '2025-01-22',
+    time: '09:00 - 21:00',
+    category: 'hackathon',
+    description: '12-hour hackathon to build innovative web applications. Prizes for top 3 teams!',
+    attendees: 120,
+    maxAttendees: 150,
+    instructor: 'Tech Community',
+    location: 'Main Auditorium',
+    thumbnail: '💻'
+  },
+  {
+    id: '4',
+    title: 'Career Guidance: Industry Insights',
+    date: '2025-01-25',
+    time: '15:00 - 16:30',
+    category: 'seminar',
+    description: 'Industry leaders share insights on career paths in technology and startup ecosystem.',
+    attendees: 85,
+    maxAttendees: 100,
+    instructor: 'Panel of Experts',
+    location: 'Seminar Hall B',
+    thumbnail: '🎯'
+  },
+  {
+    id: '5',
+    title: 'Blockchain & Cryptocurrency Fundamentals',
+    date: '2025-01-28',
+    time: '11:00 - 13:00',
+    category: 'webinar',
+    description: 'Introduction to blockchain technology, smart contracts, and cryptocurrency basics.',
+    attendees: 67,
+    maxAttendees: 80,
+    instructor: 'Alex Rodriguez',
+    location: 'Virtual',
+    thumbnail: '⛓️'
+  },
+  {
+    id: '6',
+    title: 'UI/UX Design Masterclass',
+    date: '2025-02-01',
+    time: '13:00 - 17:00',
+    category: 'workshop',
+    description: 'Learn modern design principles, prototyping tools, and user research methodologies.',
+    attendees: 32,
+    maxAttendees: 35,
+    instructor: 'Emma Davis',
+    location: 'Design Studio',
+    thumbnail: '🎨'
+  }
+];
