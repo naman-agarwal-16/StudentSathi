@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const response = await api.login(email, password);
       setUser(response.user);
       toast.success('Logged in successfully');
-      navigate('/');
+      navigate('/dashboard');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
         ? (error as { response?: { data?: { message?: string } } }).response?.data?.message 

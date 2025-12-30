@@ -101,15 +101,6 @@ StudentSathi/
 │   │   └── seed.ts         # Database seeding
 │   └── package.json
 │
-├── frontend/               # Next.js 14 application
-│   ├── src/
-│   │   ├── app/           # Next.js App Router
-│   │   ├── components/    # React components
-│   │   ├── hooks/         # Custom React hooks
-│   │   ├── lib/           # Utility libraries
-│   │   └── services/      # API service layer
-│   └── package.json
-│
 ├── .github/
 │   └── workflows/         # CI/CD pipelines
 │       └── ci.yml         # Main CI workflow
@@ -291,7 +282,6 @@ MIT
 ## 🔗 Links
 
 - [Backend README](./backend/README.md)
-- [Frontend Documentation](./frontend/README.md)
 - [API Documentation](./backend/docs/API.md)
 - [Contributing Guide](./CONTRIBUTING.md)
 
