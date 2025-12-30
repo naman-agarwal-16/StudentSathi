@@ -1,8 +1,15 @@
 # StudentSathi - Student Engagement & Analytics Platform
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
+> A comprehensive Learning Management System with **role-based access control**, **real-time analytics**, and **LMS integration support**. Built for modern education with **Supabase** and ready for **separate deployment**.
+
 ## Overview
 
-StudentSathi is a comprehensive Learning Management System (LMS) designed to help educators track student engagement, manage attendance, analyze performance, and integrate with external platforms. Built with modern web technologies, it provides real-time analytics and actionable insights to improve student outcomes.
+StudentSathi is a production-ready LMS platform designed for educators to track student engagement, manage attendance, analyze performance, and integrate with external platforms. Features enterprise-grade RBAC, Supabase integration, and monorepo structure optimized for independent frontend/backend deployment.
 
 ## Features
 
@@ -92,55 +99,97 @@ StudentSathi is a comprehensive Learning Management System (LMS) designed to hel
 - **HTTP Client**: Axios
 - **Routing**: React Router v6
 
-## Quick Start
+## 📁 Project Structure
 
-See [SETUP_GUIDE.md](./SETUP_GUIDE.md) for detailed setup instructions.
+```
+StudentSathi/                    # Monorepo root
+├── frontend/                    # Frontend application (React + Vite)
+│   ├── src/
+│   │   ├── components/          # React components
+│   │   │   └── ui/             # shadcn/ui components
+│   │   ├── pages/              # Page components
+│   │   ├── hooks/              # Custom hooks (auth, RBAC)
+│   │   ├── services/           # API service layer
+│   │   ├── lib/                # Utilities
+│   │   └── types/              # TypeScript types
+│   ├── public/                 # Static assets
+│   ├── package.json            # Frontend dependencies
+│   └── vite.config.ts          # Vite configuration
+├── backend/                     # Backend API (Express + Prisma)
+│   ├── prisma/
+│   │   ├── schema.prisma       # Database schema
+│   │   └── migrations/         # Database migrations
+│   ├── src/
+│   │   ├── controllers/        # Request handlers
+│   │   ├── services/           # Business logic
+│   │   ├── routes/             # API routes
+│   │   ├── middleware/         # Auth, RBAC, validation
+│   │   ├── types/              # DTOs and types
+│   │   └── config/             # Configuration
+│   └── package.json            # Backend dependencies
+├── .github/
+│   ├── workflows/              # CI/CD pipelines
+│   ├── ISSUE_TEMPLATE/         # Issue templates
+│   └── PULL_REQUEST_TEMPLATE.md
+├── package.json                # Root package (monorepo scripts)
+├── LICENSE                     # MIT License
+├── CONTRIBUTING.md             # Contribution guidelines
+├── CODE_OF_CONDUCT.md          # Community guidelines
+├── CHANGELOG.md                # Version history
+├── SECURITY.md                 # Security policy
+├── SETUP_GUIDE.md              # Local development setup
+├── SUPABASE_MIGRATION.md       # Supabase migration guide
+├── RBAC_GUIDE.md               # RBAC implementation guide
+└── README.md                   # This file
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ and npm 9+
+- PostgreSQL 14+ OR Supabase account
+- Git
+
+### Local Development
 
 ```bash
-# Clone repository
+# 1. Clone repository
 git clone https://github.com/naman-agarwal-16/StudentSathi.git
 cd StudentSathi
 
-# Setup backend
+# 2. Install all dependencies
+npm run install:all
+
+# 3. Configure backend
 cd backend
-npm install
 cp .env.example .env
-# Edit .env with your configuration
+# Edit .env with your database credentials
+
+# 4. Run database migrations
+npx prisma generate
 npx prisma migrate dev
-npm run dev
 
-# Setup frontend (in new terminal)
+# 5. Start development servers (from root)
 cd ..
-npm install
-echo "VITE_API_URL=http://localhost:3001/api" > .env.local
 npm run dev
+# Frontend: http://localhost:8080
+# Backend: http://localhost:3001
 ```
 
-## Project Structure
+### Using Supabase
 
-```
-StudentSathi/
-├── backend/               # Backend API
-│   ├── prisma/           # Database schema and migrations
-│   ├── src/
-│   │   ├── controllers/  # Request handlers
-│   │   ├── services/     # Business logic
-│   │   ├── routes/       # API routes
-│   │   ├── middleware/   # Auth, validation, error handling
-│   │   ├── types/        # TypeScript types and DTOs
-│   │   ├── config/       # Configuration
-│   │   └── utils/        # Utilities
-│   └── package.json
-├── src/                  # Frontend application
-│   ├── components/       # React components
-│   ├── pages/           # Page components
-│   ├── hooks/           # Custom hooks (including auth)
-│   ├── services/        # API service layer
-│   ├── lib/             # Utilities
-│   └── data/            # Mock data (legacy)
-├── public/              # Static assets
-├── SETUP_GUIDE.md       # Detailed setup instructions
-└── package.json         # Frontend dependencies
+See [SUPABASE_MIGRATION.md](SUPABASE_MIGRATION.md) for complete Supabase setup guide.
+
+```bash
+# Quick Supabase setup
+cd backend
+cp .env.example .env
+
+# Update DATABASE_URL in .env:
+# DATABASE_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true"
+
+npx prisma generate
+npx prisma migrate deploy
 ```
 
 ## API Documentation
@@ -154,47 +203,71 @@ Key endpoints:
 - `POST /api/attendance/bulk` - Record attendance
 - `GET /api/analytics/summary` - Dashboard data
 
-## Security
+## 🔐 Security
 
-- ✅ Password hashing with bcrypt
-- ✅ JWT token authentication
-- ✅ HttpOnly cookies for refresh tokens
-- ✅ CORS protection
-- ✅ Rate limiting
-- ✅ Input validation with Zod
-- ✅ SQL injection protection (Prisma)
-- ✅ XSS protection
+- ✅ Password hashing with bcrypt (salt rounds: 12)
+- ✅ JWT token authentication with refresh tokens
+- ✅ HttpOnly cookies for secure token storage
+- ✅ CORS protection with configurable origins
+- ✅ Rate limiting (100 requests per 15 minutes)
+- ✅ Input validation with Zod schemas
+- ✅ SQL injection protection (Prisma ORM)
+- ✅ XSS protection with sanitization
 - ✅ Security headers (Helmet.js)
 - ✅ Encrypted API key storage
+- ✅ Role-based access control (RBAC)
+- ✅ Row-level security ready (Supabase RLS)
 
-See [SECURITY_SUMMARY.md](./SECURITY_SUMMARY.md) for detailed security information.
+See [SECURITY.md](SECURITY.md) for security policy and [SECURITY_IMPLEMENTATION.md](SECURITY_IMPLEMENTATION.md) for implementation details.
 
-## Testing
+## 🧪 Testing
 
 ```bash
+# Run all tests
+npm run test
+
 # Backend tests
 cd backend
 npm test
 npm run test:coverage
 
 # Frontend linting
-cd ..
+cd frontend
 npm run lint
 ```
 
 Current test coverage: ~90% (backend)
 
-## Development
+## 🛠️ Development
+
+### Monorepo Commands (from root)
+```bash
+npm run dev                 # Start both frontend and backend
+npm run dev:frontend        # Start only frontend
+npm run dev:backend         # Start only backend
+npm run build               # Build both projects
+npm run build:frontend      # Build frontend
+npm run build:backend       # Build backend
+npm run install:all         # Install all dependencies
+npm run prisma:generate     # Generate Prisma Client
+npm run prisma:migrate      # Run database migrations
+npm run prisma:studio       # Open Prisma Studio
+```
 
 ### Backend Development
 ```bash
 cd backend
-npm run dev  # Starts with hot reload
+npm run dev                 # Starts on port 3001 with hot reload
+npm run build               # Build for production
+npm start                   # Start production server
 ```
 
 ### Frontend Development
 ```bash
-npm run dev  # Starts on port 8080
+cd frontend
+npm run dev                 # Starts on port 8080 with HMR
+npm run build               # Build for production
+npm run preview             # Preview production build
 ```
 
 ### Database Management
@@ -207,76 +280,186 @@ npx prisma generate  # Regenerate Prisma client
 
 ## Environment Variables
 
-### Backend (.env)
+## 📦 Deployment
+
+### Separate Frontend & Backend Deployment
+
+This project is structured as a **monorepo** with independent frontend and backend that can be deployed separately.
+
+#### Deploy Backend
+**Recommended Platforms:**
+- [Railway](https://railway.app) - Easy PostgreSQL + Node.js deployment
+- [Render](https://render.com) - Free tier available
+- [Heroku](https://heroku.com) - Classic PaaS
+- [Fly.io](https://fly.io) - Global edge deployment
+
+**Quick Deploy to Railway:**
+```bash
+# Install Railway CLI
+npm install -g @railway/cli
+
+# Login and deploy
+railway login
+railway init
+railway add
+railway up
+
+# Set environment variables in Railway dashboard
+```
+
+#### Deploy Frontend
+**Recommended Platforms:**
+- [Vercel](https://vercel.com) - Optimized for Vite/React
+- [Netlify](https://netlify.com) - Easy continuous deployment
+- [Cloudflare Pages](https://pages.cloudflare.com) - Fast global CDN
+
+**Quick Deploy to Vercel:**
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy
+cd frontend
+vercel
+
+# Set VITE_API_BASE_URL environment variable
+```
+
+#### Using Supabase
+See [SUPABASE_MIGRATION.md](SUPABASE_MIGRATION.md) for complete guide.
+
+**Benefits:**
+- Managed PostgreSQL database
+- Connection pooling included
+- Automatic backups
+- Real-time capabilities
+- Row Level Security (RLS)
+
+## 🌍 Environment Variables
+
+### Backend (`backend/.env`)
 ```env
+# Database
 DATABASE_URL="postgresql://user:pass@localhost:5432/studentsathi"
-JWT_SECRET=your-secret-key-32-chars
-ENCRYPTION_KEY=your-encryption-key-32-chars
+# OR for Supabase:
+DATABASE_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true"
+
+# Security
+JWT_SECRET=your-secret-key-minimum-32-characters-long
+ENCRYPTION_KEY=your-encryption-key-32-characters-long
 FRONTEND_URL=http://localhost:8080
-SMTP_HOST=smtp.gmail.com  # Optional
-SMTP_USER=your-email@gmail.com  # Optional
-SMTP_PASS=your-app-password  # Optional
+
+# Email (Optional - for password reset)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
 ```
 
-### Frontend (.env.local)
+### Frontend (`frontend/.env`)
 ```env
-VITE_API_URL=http://localhost:3001/api
+# API Configuration
+VITE_API_BASE_URL=http://localhost:3001/api
+# OR for production:
+VITE_API_BASE_URL=https://your-backend.railway.app/api
+
+# Supabase (Optional - if using Supabase client directly)
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-## Contributing
+## 🤝 Contributing
 
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+**Quick Start:**
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Make your changes following our code style
+4. Add tests for new features
+5. Commit using conventional commits (`feat:`, `fix:`, `docs:`, etc.)
+6. Push and open a Pull Request
 
-## Roadmap
+See also:
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
 
-### Phase 1 (Completed)
-- [x] Authentication system
-- [x] Student CRUD
-- [x] Alert management
+## 📋 Roadmap
+
+### ✅ Phase 1 (Completed)
+- [x] Authentication system with JWT
+- [x] Student CRUD operations
+- [x] Alert management system
 - [x] Attendance tracking
-- [x] Performance/grades
+- [x] Performance/grades management
 - [x] Analytics dashboard
-- [x] LMS integrations (stub)
-- [x] Webhook system (stub)
+- [x] LMS integrations (infrastructure)
+- [x] Webhook system (infrastructure)
+- [x] Role-based access control (RBAC)
+- [x] Monorepo structure for separate deployment
+- [x] Supabase integration support
 
-### Phase 2 (In Progress)
-- [ ] Complete UI integration for all features
-- [ ] Comprehensive test coverage (>90%)
-- [ ] E2E tests with Cypress
-- [ ] Real LMS integrations
+### 🚧 Phase 2 (In Progress)
+- [ ] Enhanced UI/UX improvements
+- [ ] Comprehensive test coverage (>95%)
+- [ ] E2E tests with Playwright
+- [ ] Real LMS integrations (Google Classroom, Canvas)
 - [ ] Actual webhook delivery system
+- [ ] Two-factor authentication (2FA)
 
-### Phase 3 (Planned)
+### 🔮 Phase 3 (Planned)
 - [ ] Advanced analytics and ML predictions
 - [ ] Mobile app (React Native)
 - [ ] Real-time notifications (WebSocket)
-- [ ] Bulk import/export
-- [ ] Reporting system
+- [ ] Bulk import/export (CSV, Excel)
+- [ ] Custom reporting system
+- [ ] Multi-language support (i18n)
 
-## License
+## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
-## Support
+## 📚 Documentation
 
-- **Documentation**: [SETUP_GUIDE.md](./SETUP_GUIDE.md)
-- **Issues**: [GitHub Issues](https://github.com/naman-agarwal-16/StudentSathi/issues)
-- **Security**: Report via GitHub Security Advisories
+- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Local development setup
+- **[SUPABASE_MIGRATION.md](SUPABASE_MIGRATION.md)** - Supabase deployment guide
+- **[RBAC_GUIDE.md](RBAC_GUIDE.md)** - Role-based access control documentation
+- **[SECURITY.md](SECURITY.md)** - Security policy and reporting
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines
+- **[CHANGELOG.md](CHANGELOG.md)** - Version history
+- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - Community guidelines
 
-## Acknowledgments
+## 💬 Support
+
+- 📖 **Documentation**: Check the guides above
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/naman-agarwal-16/StudentSathi/issues/new?template=bug_report.yml)
+- ✨ **Feature Requests**: [GitHub Issues](https://github.com/naman-agarwal-16/StudentSathi/issues/new?template=feature_request.yml)
+- 🔒 **Security Issues**: See [SECURITY.md](SECURITY.md)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/naman-agarwal-16/StudentSathi/discussions)
+
+## 🙏 Acknowledgments
 
 Built with modern technologies and best practices:
-- React + TypeScript
-- Express + Prisma
-- shadcn/ui components
-- TailwindCSS styling
+- **Frontend**: React 18, TypeScript, Vite, shadcn/ui, TailwindCSS
+- **Backend**: Node.js, Express, Prisma, PostgreSQL
+- **Database**: Supabase/PostgreSQL
+- **Deployment**: Vercel, Railway, Netlify ready
+- **Testing**: Jest, React Testing Library
+- **CI/CD**: GitHub Actions
+
+Special thanks to the open-source community and contributors!
 
 ---
 
-**Project Status**: Production-ready backend, functional frontend with core features implemented.
+<div align="center">
 
-**Version**: 1.0.0
+**Built with ❤️ for Education**
+
+[![GitHub stars](https://img.shields.io/github/stars/naman-agarwal-16/StudentSathi?style=social)](https://github.com/naman-agarwal-16/StudentSathi)
+[![GitHub forks](https://img.shields.io/github/forks/naman-agarwal-16/StudentSathi?style=social)](https://github.com/naman-agarwal-16/StudentSathi/fork)
+
+**Version 1.0.0** | **Status: Production Ready** | **License: MIT**
+
+[Report Bug](https://github.com/naman-agarwal-16/StudentSathi/issues/new?template=bug_report.yml) • [Request Feature](https://github.com/naman-agarwal-16/StudentSathi/issues/new?template=feature_request.yml) • [View Demo](#) • [Documentation](SETUP_GUIDE.md)
+
+</div>
