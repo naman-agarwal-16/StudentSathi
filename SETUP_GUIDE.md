@@ -23,7 +23,7 @@ StudentSathi is a comprehensive Learning Management System (LMS) with student en
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Agent05-code/StudentSathi.git
+git clone https://github.com/naman-agarwal-16/StudentSathi.git
 cd StudentSathi
 ```
 
@@ -334,7 +334,7 @@ pm2 start dist/server.js --name studentsathi-backend
 ## Support
 
 For issues and questions:
-- GitHub Issues: https://github.com/Agent05-code/StudentSathi/issues
+- GitHub Issues: https://github.com/naman-agarwal-16/StudentSathi/issues
 - Documentation: Check README.md files
 
 ## License

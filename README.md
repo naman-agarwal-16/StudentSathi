@@ -264,7 +264,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## Support
 
 - **Documentation**: [SETUP_GUIDE.md](./SETUP_GUIDE.md)
-- **Issues**: [GitHub Issues](https://github.com/Agent05-code/StudentSathi/issues)
+- **Issues**: [GitHub Issues](https://github.com/naman-agarwal-16/StudentSathi/issues)
 - **Security**: Report via GitHub Security Advisories
 
 ## Acknowledgments
