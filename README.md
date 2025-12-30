@@ -98,7 +98,7 @@ See [SETUP_GUIDE.md](./SETUP_GUIDE.md) for detailed setup instructions.
 
 ```bash
 # Clone repository
-git clone https://github.com/Agent05-code/StudentSathi.git
+git clone https://github.com/naman-agarwal-16/StudentSathi.git
 cd StudentSathi
 
 # Setup backend
