@@ -2,20 +2,24 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { api } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { UserRole, Permission, hasPermission } from '@/types/roles';
 
 interface User {
   id: string;
   email: string;
   name: string;
-  role: string;
+  role: UserRole;
+  studentId?: string; // For student users
 }
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (data: { email: string; password: string; name: string }) => Promise<void>;
+  hasPermission: (permission: Permission) => boolean;
+  hasRole: (roles: UserRole | UserRole[]) => boolean;
+  login: (email: string, password: string, role?: UserRole) => Promise<void>;
+  register: (data: { email: string; password: string; name: string; role: UserRole }) => Promise<void>;
   logout: () => Promise<void>;
   refetchUser: () => Promise<void>;
 }

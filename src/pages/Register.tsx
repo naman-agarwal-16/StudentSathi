@@ -4,13 +4,16 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { GraduationCap, Mail, Lock, User, ArrowRight, AlertCircle } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { GraduationCap, Mail, Lock, User, ArrowRight, AlertCircle, UserCircle } from 'lucide-react';
+import { UserRole } from '@/types/roles';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [role, setRole] = useState<UserRole>(UserRole.TEACHER);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { register } = useAuth();
@@ -32,7 +35,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      await register({ email, password, name });
+      await register({ email, password, name, role });
     } catch (error: unknown) {
       const message = error instanceof Error && 'response' in error 
         ? (error as { response?: { data?: { message?: string } } }).response?.data?.message 
@@ -102,6 +105,25 @@ const Register = () => {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="role" className="text-sm font-medium">
+                I am a
+              </Label>
+              <div className="relative">
+                <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground z-10" />
+                <Select value={role} onValueChange={(value) => setRole(value as UserRole)}>
+                  <SelectTrigger className="pl-11 h-12 bg-white dark:bg-slate-950 border-[#94A3B8] dark:border-slate-800 focus:border-[#0EA5E9] focus:ring-[#0EA5E9]">
+                    <SelectValue placeholder="Select your role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={UserRole.STUDENT}>Student</SelectItem>
+                    <SelectItem value={UserRole.TEACHER}>Teacher / Faculty</SelectItem>
+                    <SelectItem value={UserRole.ADMIN}>Administrator</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">
                 Email Address
               </Label>
@@ -110,7 +132,7 @@ const Register = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="teacher@school.edu"
+                  placeholder={role === UserRole.STUDENT ? "student@school.edu" : "teacher@school.edu"}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required

@@ -5,7 +5,8 @@ export const RegisterSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(100),
   name: z.string().min(2).max(100),
-  role: z.enum(['ADMIN', 'TEACHER', 'ASSISTANT']).default('TEACHER'),
+  role: z.enum(['ADMIN', 'TEACHER', 'STUDENT', 'ASSISTANT']).default('TEACHER'),
+  studentId: z.string().min(3).max(50).optional(), // Required for STUDENT role
 });
 
 export const LoginSchema = z.object({
@@ -27,7 +28,8 @@ export const AuthResponseSchema = z.object({
     id: z.string().uuid(),
     email: z.string().email(),
     name: z.string(),
-    role: z.enum(['ADMIN', 'TEACHER', 'ASSISTANT']),
+    role: z.enum(['ADMIN', 'TEACHER', 'STUDENT', 'ASSISTANT']),
+    studentId: z.string().optional(),
   }),
   accessToken: z.string(),
   refreshToken: z.string().optional(),

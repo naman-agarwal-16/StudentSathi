@@ -3,6 +3,7 @@ import { api } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { AuthContext, useAuth, User } from './auth-context';
+import { UserRole, Permission, hasPermission as checkPermission } from '@/types/roles';
 
 export { useAuth };
 
@@ -33,12 +34,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     fetchUser();
   }, [fetchUser]);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, role?: UserRole) => {
     try {
       const response = await api.login(email, password);
       setUser(response.user);
       toast.success('Logged in successfully');
-      navigate('/dashboard');
+      
+      // Role-based navigation
+      if (response.user.role === UserRole.STUDENT) {
+        navigate('/student/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error 
         ? (error as { response?: { data?: { message?: string } } }).response?.data?.message 
@@ -52,10 +59,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     email: string;
     password: string;
     name: string;
+    role: UserRole;
   }) => {
     const response = await api.register(data);
     setUser(response.user);
-    navigate('/dashboard');
+    
+    // Role-based navigation
+    if (response.user.role === UserRole.STUDENT) {
+      navigate('/student/dashboard');
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   const logout = async () => {
@@ -63,10 +77,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       await api.logout();
       setUser(null);
       toast.success('Logged out successfully');
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-      // Still clear user state even if API call fails
+      nahasPermissionCheck = (permission: Permission): boolean => {
+    if (!user) return false;
+    return checkPermission(user.role, permission);
+  };
+
+  const hasRole = (roles: UserRole | UserRole[]): boolean => {
+    if (!user) return false;
+    const roleArray = Array.isArray(roles) ? roles : [roles];
+    return roleArray.includes(user.role);
+  };
+
+  const value = {
+    user,
+    isLoading,
+    isAuthenticated: !!user,
+    hasPermission: hasPermissionCheck,
+    hasRoletate even if API call fails
       setUser(null);
       navigate('/login');
     }

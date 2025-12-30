@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./hooks/useAuth";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { UserRole, Permission } from "./types/roles";
 
 // Lazy load pages for optimal performance
 const Landing = lazy(() => import("./pages/Landing"));
@@ -15,6 +16,8 @@ const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Demo = lazy(() => import("./pages/Demo"));
+const StudentDashboard = lazy(() => import("./pages/StudentDashboard"));
+const Unauthorized = lazy(() => import("./pages/Unauthorized"));
 
 // Configure QueryClient with production-ready settings
 const queryClient = new QueryClient({
@@ -60,14 +63,34 @@ const App = () => (
                 <Route path="/demo" element={<Demo />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/unauthorized" element={<Unauthorized />} />
+                
+                {/* Teacher & Admin Dashboard */}
                 <Route
                   path="/dashboard"
                   element={
-                    <ProtectedRoute>
+                    <ProtectedRoute 
+                      allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}
+                      requiredPermissions={[Permission.VIEW_STUDENTS]}
+                    >
                       <Index />
                     </ProtectedRoute>
                   }
                 />
+                
+                {/* Student Dashboard */}
+                <Route
+                  path="/student/dashboard"
+                  element={
+                    <ProtectedRoute 
+                      allowedRoles={[UserRole.STUDENT]}
+                      requiredPermissions={[Permission.VIEW_OWN_DATA]}
+                    >
+                      <StudentDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

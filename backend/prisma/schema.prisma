@@ -16,6 +16,7 @@ model User {
   passwordHash    String   @db.VarChar(255)
   name            String   @db.VarChar(100)
   role            UserRole @default(TEACHER)
+  studentId       String?  @db.VarChar(50) // For student users
   resetToken      String?  @db.VarChar(255)
   resetTokenExpiry DateTime?
   refreshToken    String?  @db.Text
@@ -23,6 +24,7 @@ model User {
   updatedAt       DateTime @updatedAt
 
   @@index([email])
+  @@index([studentId])
   @@map("users")
 }
 
@@ -209,5 +211,6 @@ enum WebhookEvent {
 enum UserRole {
   ADMIN
   TEACHER
+  STUDENT
   ASSISTANT
 }
