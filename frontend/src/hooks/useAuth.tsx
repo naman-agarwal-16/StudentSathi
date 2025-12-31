@@ -77,7 +77,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       await api.logout();
       setUser(null);
       toast.success('Logged out successfully');
-      nahasPermissionCheck = (permission: Permission): boolean => {
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Clear state even if API call fails
+      setUser(null);
+      navigate('/login');
+    }
+  };
+
+  const hasPermissionCheck = (permission: Permission): boolean => {
     if (!user) return false;
     return checkPermission(user.role, permission);
   };
@@ -88,17 +97,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return roleArray.includes(user.role);
   };
 
-  const value = {
-    user,
-    isLoading,
-    isAuthenticated: !!user,
-    hasPermission: hasPermissionCheck,
-    hasRoletate even if API call fails
-      setUser(null);
-      navigate('/login');
-    }
-  };
-
   const refetchUser = async () => {
     await fetchUser();
   };
@@ -107,6 +105,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     user,
     isLoading,
     isAuthenticated: !!user,
+    hasPermission: hasPermissionCheck,
+    hasRole,
     login,
     register,
     logout,
