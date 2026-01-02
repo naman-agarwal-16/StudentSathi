@@ -17,7 +17,12 @@ import {
   ChevronRight,
   Award,
   Target,
-  Building2
+  Building2,
+  Code,
+  Database,
+  Server,
+  Brain,
+  Lock
 } from 'lucide-react';
 
 const Landing = () => {
@@ -26,12 +31,12 @@ const Landing = () => {
 
   // Set page title and meta description
   useEffect(() => {
-    document.title = 'StudentSathi - Enterprise Student Engagement Analytics Platform';
+    document.title = 'StudentSathi - AI-Powered Early Warning System';
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute(
         'content',
-        'Enterprise-grade student engagement analytics platform. Empower educators with AI-powered insights, predictive alerts, and comprehensive performance tracking.'
+        'AI-powered early warning system that helps institutions identify at-risk students 3x faster through real-time engagement analytics.'
       );
     }
   }, []);
@@ -76,30 +81,35 @@ const Landing = () => {
   ];
 
   const stats = [
-    { value: '500+', label: 'Partner Institutions', icon: Building2 },
-    { value: '50,000+', label: 'Active Students', icon: Users },
-    { value: '98%', label: 'Customer Satisfaction', icon: Award },
-    { value: '24/7', label: 'Enterprise Support', icon: Shield }
+    { value: '< 100ms', label: 'Data Latency', icon: Zap },
+    { value: '99.9%', label: 'Uptime SLA', icon: TrendingUp },
+    { value: 'AES-256', label: 'Security', icon: Lock },
+    { value: 'FERPA Ready', label: 'Compliance', icon: Shield }
   ];
 
-  const testimonials = [
+  const techStack = [
+    { name: 'React', icon: Code },
+    { name: 'Node.js', icon: Server },
+    { name: 'Supabase', icon: Database },
+    { name: 'Prisma', icon: Database },
+    { name: 'OpenAI', icon: Brain }
+  ];
+
+  const useCases = [
     { 
-      name: 'Dr. Sarah Johnson', 
-      role: 'Dean of Student Affairs, Boston University', 
-      quote: 'StudentSathi has transformed our approach to student success. The predictive analytics have helped us reduce at-risk cases by 35% in just one semester.',
-      rating: 5 
+      role: 'For Deans', 
+      description: 'Monitor aggregate attendance trends and retention rates across all departments in real-time.',
+      icon: Building2 
     },
     { 
-      name: 'Prof. Michael Chen', 
-      role: 'Academic Director, Stanford Online', 
-      quote: 'The most comprehensive student analytics platform we\'ve implemented. The ROI was evident within the first quarter.',
-      rating: 5 
+      role: 'For Professors', 
+      description: 'Receive automated alerts when a student misses 3 consecutive classes or fails a quiz.',
+      icon: Bell 
     },
     { 
-      name: 'Dr. Lisa Martinez', 
-      role: 'VP of Enrollment, NYU', 
-      quote: 'Outstanding support and a platform that scales. Our retention rates have improved significantly, and faculty adoption has been seamless.',
-      rating: 5 
+      role: 'For Students', 
+      description: 'Track your own academic health score and get personalized predictions for final grades.',
+      icon: Users 
     }
   ];
 
@@ -139,6 +149,7 @@ const Landing = () => {
           </div>
         </div>
       </nav>
+
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6 bg-gradient-to-b from-[#F8FAFC] to-white">
         <div className="max-w-7xl mx-auto">
@@ -156,7 +167,7 @@ const Landing = () => {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F8FAFC] border border-[#94A3B8] mb-6"
             >
               <Award className="w-4 h-4 text-[#0EA5E9]" />
-              <span className="text-sm text-[#0F172A] font-medium">Trusted by 500+ Leading Educational Institutions</span>
+              <span className="text-sm text-[#0F172A] font-medium">AI-Powered Early Warning System</span>
             </motion.div>
 
             {/* Main Heading */}
@@ -166,9 +177,9 @@ const Landing = () => {
               transition={{ delay: 0.3 }}
               className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-[#1E293B] leading-tight"
             >
-              Enterprise Student Engagement
+              Stop Student Dropouts
               <span className="block mt-2 bg-gradient-to-r from-[#0F172A] to-[#0EA5E9] bg-clip-text text-transparent">
-                Analytics Platform
+                Before They Happen
               </span>
             </motion.h1>
 
@@ -178,7 +189,7 @@ const Landing = () => {
               transition={{ delay: 0.4 }}
               className="text-xl md:text-2xl text-slate-600 mb-8 leading-relaxed"
             >
-              Empower your institution with AI-driven insights that drive student success, improve retention, and optimize educational outcomes.
+              The AI-powered early warning system that helps institutions identify at-risk students 3x faster through real-time engagement analytics.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -189,20 +200,20 @@ const Landing = () => {
               className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
             >
               <Button
-                onClick={() => navigate('/register')}
+                onClick={() => navigate('/demo')}
                 size="lg"
                 className="px-8 py-6 text-lg font-semibold bg-[#0EA5E9] hover:bg-[#0284c7] text-white shadow-lg shadow-[#0EA5E9]/20"
               >
-                Schedule a Demo
+                Try Live Demo
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
               <Button
-                onClick={() => navigate('/demo')}
+                onClick={() => window.open('https://github.com/naman-agarwal-16/StudentSathi', '_blank')}
                 size="lg"
                 variant="outline"
                 className="px-8 py-6 text-lg font-semibold border-2 border-[#94A3B8] text-[#0F172A] hover:bg-[#F8FAFC]"
               >
-                Explore Platform
+                View Architecture
               </Button>
             </motion.div>
 
@@ -223,9 +234,37 @@ const Landing = () => {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                <span>Open Source</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                 <span>99.9% Uptime SLA</span>
               </div>
             </motion.div>
+          </motion.div>
+
+          {/* Tech Stack Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="mt-20"
+          >
+            <p className="text-center text-sm text-slate-500 mb-8 font-medium">Powered by Modern Enterprise Tech</p>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+              {techStack.map((tech, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
+                  className="flex flex-col items-center gap-2 p-4 rounded-lg hover:bg-[#F8FAFC] transition-colors"
+                >
+                  <tech.icon className="w-8 h-8 text-[#0EA5E9]" />
+                  <span className="text-sm font-semibold text-slate-700">{tech.name}</span>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
 
           {/* Stats Section */}
@@ -308,7 +347,7 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Testimonials/Social Proof */}
+        {/* Platform Use Cases Section */}
         <section className="py-24 px-6 bg-white">
           <div className="max-w-7xl mx-auto">
             <motion.div
@@ -318,19 +357,19 @@ const Landing = () => {
               className="text-center mb-16"
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F8FAFC] border border-[#94A3B8] mb-4">
-                <Star className="w-4 h-4 text-[#0EA5E9] fill-[#0EA5E9]" />
-                <span className="text-sm text-[#0F172A] font-medium">Client Success Stories</span>
+                <Users className="w-4 h-4 text-[#0EA5E9]" />
+                <span className="text-sm text-[#0F172A] font-medium">Platform Use Cases</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-bold mb-4 text-[#1E293B]">
-                Trusted by Leading Institutions
+                Built for Every Stakeholder
               </h2>
               <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                See how education leaders are transforming student outcomes with StudentSathi.
+                Tailored experiences for administrators, educators, and students with role-specific insights.
               </p>
             </motion.div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {testimonials.map((testimonial, index) => (
+              {useCases.map((useCase, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
@@ -340,16 +379,15 @@ const Landing = () => {
                 >
                   <Card className="h-full bg-[#F8FAFC] border border-[#94A3B8] hover:shadow-xl transition-all">
                     <CardContent className="p-8">
-                      <div className="flex gap-1 mb-6">
-                        {[...Array(testimonial.rating)].map((_, i) => (
-                          <Star key={i} className="w-5 h-5 fill-[#0EA5E9] text-[#0EA5E9]" />
-                        ))}
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#0EA5E9] to-[#0284c7] flex items-center justify-center mb-6">
+                        <useCase.icon className="w-6 h-6 text-white" />
                       </div>
-                      <p className="text-slate-700 mb-6 text-base leading-relaxed">"{testimonial.quote}"</p>
-                      <div className="pt-4 border-t border-[#94A3B8]">
-                        <div className="font-bold text-[#1E293B]">{testimonial.name}</div>
-                        <div className="text-sm text-slate-600 mt-1">{testimonial.role}</div>
-                      </div>
+                      <h3 className="text-xl font-bold text-[#1E293B] mb-4">
+                        {useCase.role}
+                      </h3>
+                      <p className="text-slate-600 leading-relaxed">
+                        {useCase.description}
+                      </p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -365,16 +403,17 @@ const Landing = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0EA5E9] p-12 md:p-16 text-center"
+              className="relative overflow-hidden rounded-3xl"
             >
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0YzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHptMC0xMGMwLTIuMjEtMS43OS00LTQtNHMtNCAxLjc5LTQgNCAxLjc5IDQgNCA0IDQtMS43OSA0LTR6bTEwIDEwYzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-100"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A] to-[#0EA5E9]"></div>
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0YzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHptMC0xMGMwLTIuMjEtMS43OS00LTQtNHMtNCAxLjc5LTQgNCAxLjc5IDQgNCA0IDQtMS43OSA0LTR6TTI2IDI0YzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHptMCAxMGMwLTIuMjEtMS43OS00LTQtNHMtNCAxLjc5LTQgNCAxLjc5IDQgNCA0IDQtMS43OSA0LTR6bTEwIDBjMC0yLjIxLTEuNzktNC00LTRzLTQgMS43OS00IDQgMS43OSA0IDQgNCA0LTEuNzkgNC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-30"></div>
               
-              <div className="relative">
+              <div className="relative p-8 md:p-12 text-center">
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
                   Ready to Transform Student Success?
                 </h2>
                 <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-                  Schedule a personalized demo and discover how StudentSathi can help your institution achieve measurable improvements in student engagement and retention.
+                  Join leading institutions using StudentSathi to improve retention rates and student outcomes with data-driven insights.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button
@@ -382,7 +421,7 @@ const Landing = () => {
                     size="lg"
                     className="px-8 py-6 text-lg font-semibold bg-white text-[#0EA5E9] hover:bg-[#F8FAFC] shadow-xl"
                   >
-                    Schedule Enterprise Demo
+                    Get Started Free
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                   <Button
@@ -395,7 +434,7 @@ const Landing = () => {
                   </Button>
                 </div>
                 <p className="mt-8 text-sm text-white/80">
-                  Trusted by 500+ institutions • FERPA compliant • Enterprise support included
+                  Open Source • MIT License • Community Supported
                 </p>
               </div>
             </motion.div>
@@ -414,7 +453,7 @@ const Landing = () => {
                   <span className="text-2xl font-bold text-[#1E293B]">StudentSathi</span>
                 </div>
                 <p className="text-slate-600 mb-6 max-w-sm leading-relaxed">
-                  Enterprise-grade student engagement analytics platform trusted by leading educational institutions worldwide.
+                  Open-source student engagement analytics platform built with modern enterprise technologies.
                 </p>
                 <div className="flex items-center gap-2 text-sm text-slate-600">
                   <Shield className="w-4 h-4 text-emerald-600" />
@@ -441,43 +480,41 @@ const Landing = () => {
               </div>
 
               <div>
-                <h3 className="text-slate-900 font-bold mb-4 text-sm uppercase tracking-wide">Company</h3>
+                <h3 className="text-slate-900 font-bold mb-4 text-sm uppercase tracking-wide">Resources</h3>
                 <div className="space-y-3">
-                  <button className="block text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm">
-                    About Us
+                  <button onClick={() => window.open('https://github.com/naman-agarwal-16/StudentSathi', '_blank')} className="block text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm">
+                    GitHub
                   </button>
-                  <button className="block text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm">
-                    Careers
+                  <button onClick={() => window.open('https://github.com/naman-agarwal-16/StudentSathi/blob/main/README.md', '_blank')} className="block text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm">
+                    Documentation
                   </button>
-                  <button className="block text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm">
-                    Partners
+                  <button onClick={() => window.open('https://github.com/naman-agarwal-16/StudentSathi/blob/main/CONTRIBUTING.md', '_blank')} className="block text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm">
+                    Contributing
                   </button>
-                  <button className="block text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm">
-                    Contact
+                  <button onClick={() => window.open('https://github.com/naman-agarwal-16/StudentSathi/issues', '_blank')} className="block text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm">
+                    Support
                   </button>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-slate-900 font-bold mb-4 text-sm uppercase tracking-wide">Support</h3>
+                <h3 className="text-slate-900 font-bold mb-4 text-sm uppercase tracking-wide">Connect</h3>
                 <div className="space-y-3 text-slate-600 text-sm">
-                  <p>enterprise@studentsathi.com</p>
-                  <p>support@studentsathi.com</p>
-                  <p className="mt-4 font-semibold text-slate-900">24/7 Support</p>
-                  <p>+1 (800) 555-0123</p>
+                  <p>Open Source Project</p>
+                  <p className="mt-4 font-semibold text-slate-900">MIT License</p>
+                  <p>Community Supported</p>
                 </div>
               </div>
             </div>
 
             <div className="border-t border-[#94A3B8] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-slate-600 text-sm">
-                © 2025 StudentSathi, Inc. All rights reserved.
+                © 2025 StudentSathi. Open Source Project.
               </p>
               <div className="flex gap-6">
-                <a href="#" className="text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm font-medium">Privacy Policy</a>
-                <a href="#" className="text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm font-medium">Terms of Service</a>
-                <a href="#" className="text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm font-medium">Security</a>
-                <a href="#" className="text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm font-medium">Compliance</a>
+                <a href="https://github.com/naman-agarwal-16/StudentSathi/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm font-medium">MIT License</a>
+                <a href="https://github.com/naman-agarwal-16/StudentSathi/blob/main/CODE_OF_CONDUCT.md" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm font-medium">Code of Conduct</a>
+                <a href="https://github.com/naman-agarwal-16/StudentSathi/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-[#0EA5E9] transition-colors text-sm font-medium">Security</a>
               </div>
             </div>
           </div>
