@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 import { DashboardNav } from '@/components/DashboardNav';
 import { OverviewTab } from '@/components/OverviewTab';
 import { StudentsTab } from '@/components/StudentsTab';
@@ -8,9 +9,22 @@ import { SettingsTab } from '@/components/SettingsTab';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const { isLoading } = useAuth();
 
   // Memoize callbacks to prevent unnecessary re-renders
   const handleTabChange = useCallback((tab: string) => setActiveTab(tab), []);
+
+  // Show loading state while user data is being fetched
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#F8FAFC] via-slate-50 to-slate-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#F8FAFC] border-t-[#0EA5E9] mx-auto mb-4"></div>
+          <p className="text-slate-600 font-medium">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   const renderActiveTab = () => {
     switch (activeTab) {

@@ -5,7 +5,19 @@ import { useAuth } from '@/hooks/useAuth';
 import { BookOpen, Calendar, TrendingUp, Award, Clock, AlertCircle } from 'lucide-react';
 
 export const StudentDashboard = () => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+
+  // Show loading state while user data is being fetched
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#F8FAFC] via-slate-50 to-slate-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#F8FAFC] border-t-[#0EA5E9] mx-auto mb-4"></div>
+          <p className="text-slate-600 font-medium">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   // This will be replaced with real API data
   const studentData = {
