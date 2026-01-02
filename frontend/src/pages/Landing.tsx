@@ -36,7 +36,7 @@ const Landing = () => {
     if (metaDescription) {
       metaDescription.setAttribute(
         'content',
-        'AI-powered early warning system that helps institutions identify at-risk students 3x faster through real-time engagement analytics.'
+        'AI-powered early warning system helping Indian institutions improve NAAC accreditation scores and student retention with real-time analytics.'
       );
     }
   }, []);
@@ -63,7 +63,7 @@ const Landing = () => {
     {
       icon: Shield,
       title: 'Enterprise Security',
-      description: 'Bank-level encryption, role-based access control, and full FERPA/GDPR compliance for data protection.',
+      description: 'Bank-level encryption, role-based access control, and compliance with India\'s DPDP Act 2023 and global standards.',
       color: 'from-[#0EA5E9] to-[#0284c7]'
     },
     {
@@ -84,7 +84,12 @@ const Landing = () => {
     { value: '< 100ms', label: 'Data Latency', icon: Zap },
     { value: '99.9%', label: 'Uptime SLA', icon: TrendingUp },
     { value: 'AES-256', label: 'Security', icon: Lock },
-    { value: 'FERPA Ready', label: 'Compliance', icon: Shield }
+    { 
+      value: 'DPDP Act \'23', 
+      label: 'Compliance',
+      subtitle: 'Also FERPA/GDPR ready',
+      icon: Shield 
+    }
   ];
 
   const techStack = [
@@ -164,10 +169,10 @@ const Landing = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F8FAFC] border border-[#94A3B8] mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-500 mb-6"
             >
-              <Award className="w-4 h-4 text-[#0EA5E9]" />
-              <span className="text-sm text-[#0F172A] font-medium">AI-Powered Early Warning System</span>
+              <Award className="w-4 h-4 text-emerald-600" />
+              <span className="text-sm text-emerald-900 font-semibold">100% Open Source & Free for Educational Use</span>
             </motion.div>
 
             {/* Main Heading */}
@@ -189,7 +194,7 @@ const Landing = () => {
               transition={{ delay: 0.4 }}
               className="text-xl md:text-2xl text-slate-600 mb-8 leading-relaxed"
             >
-              The AI-powered early warning system that helps institutions identify at-risk students 3x faster through real-time engagement analytics.
+              The AI-powered early warning system helping Indian institutions improve NAAC accreditation scores and student retention.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -200,20 +205,21 @@ const Landing = () => {
               className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
             >
               <Button
-                onClick={() => navigate('/demo')}
+                onClick={() => window.open('https://github.com/naman-agarwal-16/StudentSathi', '_blank')}
                 size="lg"
-                className="px-8 py-6 text-lg font-semibold bg-[#0EA5E9] hover:bg-[#0284c7] text-white shadow-lg shadow-[#0EA5E9]/20"
+                className="px-8 py-6 text-lg font-semibold bg-[#0F172A] hover:bg-[#1E293B] text-white shadow-lg"
               >
-                Try Live Demo
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <Star className="w-5 h-5 mr-2" />
+                Star on GitHub
               </Button>
               <Button
-                onClick={() => window.open('https://github.com/naman-agarwal-16/StudentSathi', '_blank')}
+                onClick={() => window.open('https://github.com/naman-agarwal-16/StudentSathi/blob/main/README.md', '_blank')}
                 size="lg"
                 variant="outline"
                 className="px-8 py-6 text-lg font-semibold border-2 border-[#94A3B8] text-[#0F172A] hover:bg-[#F8FAFC]"
               >
-                View Architecture
+                Read the Docs
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </motion.div>
 
@@ -226,11 +232,11 @@ const Landing = () => {
             >
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                <span>FERPA & GDPR Compliant</span>
+                <span>DPDP Act 2023 Compliant</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                <span>Enterprise SSO</span>
+                <span>FERPA & GDPR Ready</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
@@ -250,7 +256,7 @@ const Landing = () => {
             transition={{ delay: 0.7 }}
             className="mt-20"
           >
-            <p className="text-center text-sm text-slate-500 mb-8 font-medium">Powered by Modern Enterprise Tech</p>
+            <p className="text-center text-sm text-slate-500 mb-8 font-medium">Built with Modern Open Source Standards</p>
             <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
               {techStack.map((tech, index) => (
                 <motion.div
@@ -280,15 +286,18 @@ const Landing = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.8 + index * 0.1 }}
-                className="text-center p-6 rounded-xl bg-white border border-[#94A3B8]"
+                className="text-center p-6 rounded-xl bg-white border border-[#94A3B8] group hover:border-[#0EA5E9] transition-all"
               >
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#F8FAFC] to-[#e0f2fe] flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#F8FAFC] to-[#e0f2fe] flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                   <stat.icon className="w-6 h-6 text-[#0EA5E9]" />
                 </div>
                 <div className="text-3xl md:text-4xl font-bold text-[#1E293B] mb-1">
                   {stat.value}
                 </div>
                 <div className="text-sm text-slate-600 font-medium">{stat.label}</div>
+                {stat.subtitle && (
+                  <div className="text-xs text-slate-500 mt-1">{stat.subtitle}</div>
+                )}
               </motion.div>
             ))}
           </motion.div>
@@ -410,19 +419,19 @@ const Landing = () => {
               
               <div className="relative p-8 md:p-12 text-center">
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
-                  Ready to Transform Student Success?
+                  Ready to Deploy for Your Institution?
                 </h2>
                 <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-                  Join leading institutions using StudentSathi to improve retention rates and student outcomes with data-driven insights.
+                  Self-host on your own infrastructure or contribute to the roadmap on GitHub. Free forever, no vendor lock-in.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button
-                    onClick={() => navigate('/register')}
+                    onClick={() => window.open('https://github.com/naman-agarwal-16/StudentSathi', '_blank')}
                     size="lg"
-                    className="px-8 py-6 text-lg font-semibold bg-white text-[#0EA5E9] hover:bg-[#F8FAFC] shadow-xl"
+                    className="px-8 py-6 text-lg font-semibold bg-white text-[#0F172A] hover:bg-[#F8FAFC] shadow-xl"
                   >
-                    Get Started Free
-                    <ArrowRight className="w-5 h-5 ml-2" />
+                    <Code className="w-5 h-5 mr-2" />
+                    Clone Repository
                   </Button>
                   <Button
                     onClick={() => navigate('/demo')}
@@ -430,11 +439,12 @@ const Landing = () => {
                     variant="outline"
                     className="px-8 py-6 text-lg font-semibold bg-white/10 border-2 border-white text-white hover:bg-white/20 backdrop-blur-sm"
                   >
-                    Explore Platform
+                    Try Live Demo
+                    <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                 </div>
                 <p className="mt-8 text-sm text-white/80">
-                  Open Source • MIT License • Community Supported
+                  MIT License • Self-Hostable • No Vendor Lock-in
                 </p>
               </div>
             </motion.div>
@@ -455,9 +465,11 @@ const Landing = () => {
                 <p className="text-slate-600 mb-6 max-w-sm leading-relaxed">
                   Open-source student engagement analytics platform built with modern enterprise technologies.
                 </p>
-                <div className="flex items-center gap-2 text-sm text-slate-600">
-                  <Shield className="w-4 h-4 text-emerald-600" />
-                  <span>FERPA & GDPR Compliant</span>
+                <div className="space-y-2 text-sm text-slate-600">
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-emerald-600" />
+                    <span>Enterprise-grade security compliant with India's DPDP Act 2023 and global privacy standards (FERPA/GDPR).</span>
+                  </div>
                 </div>
               </div>
               
