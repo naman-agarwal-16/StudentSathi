@@ -59,38 +59,38 @@ const App = () => (
           <AuthProvider>
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
+                {/* Public Routes - Open to everyone */}
                 <Route path="/" element={<Landing />} />
                 <Route path="/demo" element={<Demo />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/unauthorized" element={<Unauthorized />} />
                 
-                {/* Teacher & Admin Dashboard */}
+                {/* Protected Routes - Teacher & Admin Dashboard */}
                 <Route
-                  path="/dashboard"
                   element={
                     <ProtectedRoute 
                       allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}
                       requiredPermissions={[Permission.VIEW_STUDENTS]}
-                    >
-                      <Index />
-                    </ProtectedRoute>
+                    />
                   }
-                />
+                >
+                  <Route path="/dashboard" element={<Index />} />
+                </Route>
                 
-                {/* Student Dashboard */}
+                {/* Protected Routes - Student Dashboard */}
                 <Route
-                  path="/student/dashboard"
                   element={
                     <ProtectedRoute 
                       allowedRoles={[UserRole.STUDENT]}
                       requiredPermissions={[Permission.VIEW_OWN_DATA]}
-                    >
-                      <StudentDashboard />
-                    </ProtectedRoute>
+                    />
                   }
-                />
+                >
+                  <Route path="/student/dashboard" element={<StudentDashboard />} />
+                </Route>
                 
+                {/* 404 Catch-all */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

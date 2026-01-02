@@ -1,9 +1,9 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole, Permission } from '@/types/roles';
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   allowedRoles?: UserRole[];
   requiredPermissions?: Permission[];
   fallbackPath?: string;
@@ -52,5 +52,6 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     }
   }
 
-  return <>{children}</>;
+  // Support both children and Outlet for nested routes
+  return children ? <>{children}</> : <Outlet />;
 };
