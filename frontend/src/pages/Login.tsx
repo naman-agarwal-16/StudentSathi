@@ -122,6 +122,31 @@ const Login = () => {
             </Button>
           </form>
 
+          {/* Demo Credentials Box */}
+          <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-700 rounded-xl border border-blue-200 dark:border-slate-600">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-[#0EA5E9] rounded-lg flex items-center justify-center">
+                <span className="text-white text-sm font-bold">Demo</span>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                  Try the Live Demo
+                </h3>
+                <div className="space-y-1 text-xs">
+                  <p className="text-slate-700 dark:text-slate-300">
+                    <span className="font-medium">Teacher:</span> demo@studentsathi.com / demo123
+                  </p>
+                  <p className="text-slate-700 dark:text-slate-300">
+                    <span className="font-medium">Admin:</span> admin@studentsathi.com / admin123
+                  </p>
+                  <p className="text-slate-700 dark:text-slate-300">
+                    <span className="font-medium">Student:</span> student@studentsathi.com / student123
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="mt-6 pt-6 border-t border-[#94A3B8] dark:border-slate-800">
             <p className="text-center text-sm text-muted-foreground">
               Don't have an account?{' '}

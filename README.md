@@ -13,7 +13,7 @@ StudentSathi is a production-ready LMS platform designed for educators to track 
 
 ## Features
 
-### ✅ Implemented
+### Implemented
 
 #### 1. **Authentication & Authorization**
 - Secure user registration and login with JWT
@@ -99,7 +99,7 @@ StudentSathi is a production-ready LMS platform designed for educators to track 
 - **HTTP Client**: Axios
 - **Routing**: React Router v6
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 StudentSathi/                    # Monorepo root
@@ -143,7 +143,30 @@ StudentSathi/                    # Monorepo root
 └── README.md                   # This file
 ```
 
-## 🚀 Quick Start
+## Quick Start
+
+### Try the Live Demo
+
+Experience StudentSathi without setup! Use these credentials:
+
+**Teacher Account:**
+- Email: `demo@studentsathi.com`
+- Password: `demo123`
+- Access: Full teacher dashboard with student analytics
+
+**Admin Account:**
+- Email: `admin@studentsathi.com`
+- Password: `admin123`
+- Access: Complete system administration
+
+**Student Account:**
+- Email: `student@studentsathi.com`
+- Password: `student123`
+- Access: Student dashboard with personal analytics
+
+>  **Note:** Demo accounts contain pre-populated sample data including student records, attendance, grades, and alerts.
+
+---
 
 ### Prerequisites
 - Node.js 18+ and npm 9+
@@ -169,7 +192,10 @@ cp .env.example .env
 npx prisma generate
 npx prisma migrate dev
 
-# 5. Start development servers (from root)
+# 5. Seed demo data (optional)
+npm run seed
+
+# 6. Start development servers (from root)
 cd ..
 npm run dev
 # Frontend: http://localhost:8080
@@ -203,24 +229,24 @@ Key endpoints:
 - `POST /api/attendance/bulk` - Record attendance
 - `GET /api/analytics/summary` - Dashboard data
 
-## 🔐 Security
+## Security
 
-- ✅ Password hashing with bcrypt (salt rounds: 12)
-- ✅ JWT token authentication with refresh tokens
-- ✅ HttpOnly cookies for secure token storage
-- ✅ CORS protection with configurable origins
-- ✅ Rate limiting (100 requests per 15 minutes)
-- ✅ Input validation with Zod schemas
-- ✅ SQL injection protection (Prisma ORM)
-- ✅ XSS protection with sanitization
-- ✅ Security headers (Helmet.js)
-- ✅ Encrypted API key storage
-- ✅ Role-based access control (RBAC)
-- ✅ Row-level security ready (Supabase RLS)
+- Password hashing with bcrypt (salt rounds: 12)
+- JWT token authentication with refresh tokens
+- HttpOnly cookies for secure token storage
+- CORS protection with configurable origins
+- Rate limiting (100 requests per 15 minutes)
+- Input validation with Zod schemas
+- SQL injection protection (Prisma ORM)
+- XSS protection with sanitization
+- Security headers (Helmet.js)
+- Encrypted API key storage
+- Role-based access control (RBAC)
+- Row-level security ready (Supabase RLS)
 
 See [SECURITY.md](SECURITY.md) for security policy and [SECURITY_IMPLEMENTATION.md](SECURITY_IMPLEMENTATION.md) for implementation details.
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -238,7 +264,7 @@ npm run lint
 
 Current test coverage: ~90% (backend)
 
-## 🛠️ Development
+## Development
 
 ### Monorepo Commands (from root)
 ```bash
@@ -280,7 +306,7 @@ npx prisma generate  # Regenerate Prisma client
 
 ## Environment Variables
 
-## 📦 Deployment
+## Deployment
 
 ### Separate Frontend & Backend Deployment
 
@@ -335,7 +361,7 @@ See [SUPABASE_MIGRATION.md](SUPABASE_MIGRATION.md) for complete guide.
 - Real-time capabilities
 - Row Level Security (RLS)
 
-## 🌍 Environment Variables
+## Environment Variables
 
 ### Backend (`backend/.env`)
 ```env
@@ -368,7 +394,7 @@ VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
@@ -386,7 +412,7 @@ See also:
 
 ## 📋 Roadmap
 
-### ✅ Phase 1 (Completed)
+### Phase 1 (Completed)
 - [x] Authentication system with JWT
 - [x] Student CRUD operations
 - [x] Alert management system
@@ -399,7 +425,7 @@ See also:
 - [x] Monorepo structure for separate deployment
 - [x] Supabase integration support
 
-### 🚧 Phase 2 (In Progress)
+### Phase 2 (In Progress)
 - [ ] Enhanced UI/UX improvements
 - [ ] Comprehensive test coverage (>95%)
 - [ ] E2E tests with Playwright
@@ -407,7 +433,7 @@ See also:
 - [ ] Actual webhook delivery system
 - [ ] Two-factor authentication (2FA)
 
-### 🔮 Phase 3 (Planned)
+### Phase 3 (Planned)
 - [ ] Advanced analytics and ML predictions
 - [ ] Mobile app (React Native)
 - [ ] Real-time notifications (WebSocket)
@@ -415,11 +441,11 @@ See also:
 - [ ] Custom reporting system
 - [ ] Multi-language support (i18n)
 
-## 📄 License
+## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
-## 📚 Documentation
+## Documentation
 
 - **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Local development setup
 - **[SUPABASE_MIGRATION.md](SUPABASE_MIGRATION.md)** - Supabase deployment guide
@@ -429,15 +455,15 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - **[CHANGELOG.md](CHANGELOG.md)** - Version history
 - **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - Community guidelines
 
-## 💬 Support
+## Support
 
-- 📖 **Documentation**: Check the guides above
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/naman-agarwal-16/StudentSathi/issues/new?template=bug_report.yml)
-- ✨ **Feature Requests**: [GitHub Issues](https://github.com/naman-agarwal-16/StudentSathi/issues/new?template=feature_request.yml)
-- 🔒 **Security Issues**: See [SECURITY.md](SECURITY.md)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/naman-agarwal-16/StudentSathi/discussions)
+- **Documentation**: Check the guides above
+- **Bug Reports**: [GitHub Issues](https://github.com/naman-agarwal-16/StudentSathi/issues/new?template=bug_report.yml)
+- **Feature Requests**: [GitHub Issues](https://github.com/naman-agarwal-16/StudentSathi/issues/new?template=feature_request.yml)
+- **Security Issues**: See [SECURITY.md](SECURITY.md)
+- **Discussions**: [GitHub Discussions](https://github.com/naman-agarwal-16/StudentSathi/discussions)
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 Built with modern technologies and best practices:
 - **Frontend**: React 18, TypeScript, Vite, shadcn/ui, TailwindCSS
@@ -453,7 +479,7 @@ Special thanks to the open-source community and contributors!
 
 <div align="center">
 
-**Built with ❤️ for Education**
+**Built with Love for Education**
 
 [![GitHub stars](https://img.shields.io/github/stars/naman-agarwal-16/StudentSathi?style=social)](https://github.com/naman-agarwal-16/StudentSathi)
 [![GitHub forks](https://img.shields.io/github/forks/naman-agarwal-16/StudentSathi?style=social)](https://github.com/naman-agarwal-16/StudentSathi/fork)
