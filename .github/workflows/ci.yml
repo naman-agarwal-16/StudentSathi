@@ -100,12 +100,14 @@ jobs:
         run: npm run lint
       
       - name: Build frontend
+        working-directory: ./frontend
         run: npm run build
         env:
           CI: true
       
       # Uncomment when tests are ready
       # - name: Run frontend tests
+      #   working-directory: ./frontend
       #   run: npm test -- --coverage
       #   env:
       #     CI: true
@@ -113,7 +115,7 @@ jobs:
       # - name: Upload frontend coverage
       #   uses: codecov/codecov-action@v3
       #   with:
-      #     files: ./coverage/coverage-final.json
+      #     files: ./frontend/coverage/coverage-final.json
       #     flags: frontend
       #     name: frontend-coverage
 

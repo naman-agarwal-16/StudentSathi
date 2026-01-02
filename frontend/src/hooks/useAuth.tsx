@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { useState, useEffect, ReactNode } from 'react';
 import { api } from '@/services/api';
 import { useNavigate } from 'react-router-dom';

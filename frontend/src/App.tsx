@@ -26,9 +26,10 @@ const queryClient = new QueryClient({
       staleTime: 5 * 60 * 1000, // 5 minutes
       gcTime: 10 * 60 * 1000, // 10 minutes
       refetchOnWindowFocus: false,
-      retry: (failureCount, error: any) => {
+      retry: (failureCount, error: unknown) => {
         // Don't retry on 4xx errors
-        if (error?.response?.status && error.response.status >= 400 && error.response.status < 500) {
+        const err = error as { response?: { status?: number } };
+        if (err?.response?.status && err.response.status >= 400 && err.response.status < 500) {
           return false;
         }
         return failureCount < 2;
