@@ -13,7 +13,8 @@
     "install:all": "npm install", 
     "prisma:migrate": "npm run prisma:migrate --workspace=backend",
     "prisma:generate": "npm run prisma:generate --workspace=backend",
-    "test": "npm run test --workspaces"
+    "test": "npm run test --workspaces",
+    "lint": "cd frontend && npm run lint"
   },
   "workspaces": [
     "frontend",
