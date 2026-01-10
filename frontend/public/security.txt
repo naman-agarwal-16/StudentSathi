@@ -1,0 +1,34 @@
+# Security Contact Information for StudentSathi
+# This file conforms to RFC 9116 (https://www.rfc-editor.org/rfc/rfc9116.html)
+
+Contact: mailto:security@studentsathi.com
+Contact: https://studentsathi.com/security
+Expires: 2027-01-11T23:59:59.000Z
+Preferred-Languages: en, hi
+Canonical: https://studentsathi.com/.well-known/security.txt
+
+# PGP Key (Optional - Replace with actual key if available)
+# Encryption: https://studentsathi.com/pgp-key.txt
+
+# Security Policy
+Policy: https://studentsathi.com/security-policy
+
+# Acknowledgments
+Acknowledgments: https://studentsathi.com/security-acknowledgments
+
+# Our security measures include:
+# - JWT-based authentication with HTTP-only cookies
+# - Role-based access control (RBAC)
+# - HTTPS enforcement
+# - Input validation and sanitization
+# - SQL injection prevention via Prisma ORM
+# - XSS protection
+# - CSRF protection
+# - Rate limiting
+# - Regular security audits
+
+# If you discover a security vulnerability, please:
+# 1. Email us at security@studentsathi.com
+# 2. Provide detailed information about the vulnerability
+# 3. Allow us reasonable time to address the issue before public disclosure
+# 4. We will acknowledge your contribution in our security acknowledgments page

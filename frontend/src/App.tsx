@@ -16,6 +16,7 @@ const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Demo = lazy(() => import("./pages/Demo"));
+const About = lazy(() => import("./pages/About"));
 const StudentDashboard = lazy(() => import("./pages/StudentDashboard"));
 const Unauthorized = lazy(() => import("./pages/Unauthorized"));
 
@@ -63,6 +64,7 @@ const App = () => (
                 {/* Public Routes - Open to everyone */}
                 <Route path="/" element={<Landing />} />
                 <Route path="/demo" element={<Demo />} />
+                <Route path="/about" element={<About />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/unauthorized" element={<Unauthorized />} />

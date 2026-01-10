@@ -6,6 +6,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
+import SEO from '@/components/SEO';
 
 const DemoPage = () => {
   const navigate = useNavigate();
@@ -23,7 +24,13 @@ const DemoPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F8FAFC] via-white to-[#F8FAFC]">
+    <>
+      <SEO 
+        title="Live Demo - StudentSathi | Try Our Student Engagement Platform"
+        description="Experience StudentSathi's powerful features with our interactive demo. See real-time analytics, AI-powered alerts, and comprehensive student tracking in action. No signup required!"
+        keywords="student sathi demo, studentsathi demo, LMS demo, student engagement demo, education platform demo, free LMS trial"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-[#F8FAFC] via-white to-[#F8FAFC]">
       <div className="relative z-10">
         {/* Header */}
         <motion.div 
@@ -225,7 +232,7 @@ const DemoPage = () => {
           </motion.div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

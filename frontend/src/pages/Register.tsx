@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { GraduationCap, Mail, Lock, User, ArrowRight, AlertCircle, UserCircle } from 'lucide-react';
 import { UserRole } from '@/types/roles';
+import SEO from '@/components/SEO';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -47,7 +48,13 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#F8FAFC] via-white to-[#F8FAFC] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <>
+      <SEO 
+        title="Register - StudentSathi | Create Your Education Account"
+        description="Create your free StudentSathi account. Join schools and colleges across India using AI-powered student engagement and analytics platform."
+        keywords="student sathi register, studentsathi signup, LMS registration, education platform signup, teacher account creation"
+      />
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#F8FAFC] via-white to-[#F8FAFC] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#0EA5E9]/10 rounded-full blur-3xl"></div>
@@ -219,7 +226,7 @@ const Register = () => {
           By creating an account, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
-    </div>
+    </>
   );
 };
 

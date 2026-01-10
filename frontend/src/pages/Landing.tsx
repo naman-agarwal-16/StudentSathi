@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import SEO from '@/components/SEO';
 import { 
   GraduationCap, 
   TrendingUp, 
@@ -176,7 +177,14 @@ const Landing = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <>
+      <SEO 
+        title="StudentSathi - AI-Powered Student Engagement Platform | Best LMS India"
+        description="Transform education with StudentSathi - India's leading AI-powered student engagement and analytics platform. Track attendance, predict at-risk students, boost NAAC scores. Trusted by schools and colleges. Free demo available!"
+        keywords="student sathi, studentsathi, student engagement platform India, AI education platform, LMS India, learning management system, student analytics, attendance tracking, performance monitoring, early warning system, NAAC accreditation, EdTech India, school management system, college LMS, university management software"
+        ogType="website"
+      />
+      <div className="min-h-screen bg-white">
       {/* Navigation Bar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-[#94A3B8]">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -190,8 +198,8 @@ const Landing = () => {
             <button onClick={() => navigate('/demo')} className="text-slate-600 hover:text-slate-900 font-medium transition-colors">
               Platform Demo
             </button>
-            <button className="text-slate-600 hover:text-slate-900 font-medium transition-colors">
-              Solutions
+            <button onClick={() => navigate('/about')} className="text-slate-600 hover:text-slate-900 font-medium transition-colors">
+              About Us
             </button>
             <button className="text-slate-600 hover:text-slate-900 font-medium transition-colors">
               Pricing
@@ -589,6 +597,7 @@ const Landing = () => {
         </div>
       </footer>
     </div>
+    </>
   );
 };
 

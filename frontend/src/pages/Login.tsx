@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { GraduationCap, Mail, Lock, ArrowRight } from 'lucide-react';
+import SEO from '@/components/SEO';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -26,7 +27,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#F8FAFC] via-white to-[#F8FAFC] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <>
+      <SEO 
+        title="Login - StudentSathi | Access Your Education Dashboard"
+        description="Login to StudentSathi to access your student engagement dashboard, track attendance, monitor performance, and manage educational analytics."
+        keywords="student sathi login, studentsathi login, LMS login, education platform login, teacher dashboard login"
+        noindex={false}
+      />
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#F8FAFC] via-white to-[#F8FAFC] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#0EA5E9]/10 rounded-full blur-3xl"></div>
@@ -165,7 +173,7 @@ const Login = () => {
           By signing in, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
-    </div>
+    </>
   );
 };
 

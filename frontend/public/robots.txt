@@ -1,9 +1,50 @@
-# Allow all crawlers
+# robots.txt for StudentSathi - Student Engagement Platform
+# Allow all crawlers to index public content
+
 User-agent: *
 Allow: /
+Allow: /demo
+Allow: /login
+Allow: /register
 
-# Crawl-delay for politeness
+# Disallow admin and private areas
+Disallow: /dashboard/
+Disallow: /student-dashboard/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /*.json$
+Disallow: /src/
+
+# Crawl-delay for politeness (recommended for busy sites)
 Crawl-delay: 1
 
-# Sitemap location
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Googlebot-Image
+Allow: /
+Disallow: /private/
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+# Block bad bots
+User-agent: AhrefsBot
+Crawl-delay: 5
+
+User-agent: SemrushBot
+Crawl-delay: 5
+
+# Sitemap locations
 Sitemap: https://studentsathi.com/sitemap.xml
+Sitemap: https://studentsathi.com/sitemap-index.xml
+
+# Host (preferred domain)
+Host: https://studentsathi.com

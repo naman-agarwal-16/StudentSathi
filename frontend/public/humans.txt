@@ -1,0 +1,33 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+    Developer: Naman Agarwal
+    Site: https://studentsathi.com
+    Location: India
+
+# THANKS
+    Open Source Community
+    All Educators Using StudentSathi
+
+# TECHNOLOGY COLOPHON
+    Frontend Framework: React 18
+    Build Tool: Vite
+    UI Components: shadcn/ui + Radix UI
+    Styling: Tailwind CSS
+    State Management: TanStack Query
+    Routing: React Router v6
+    Backend: Node.js + Express
+    Database: PostgreSQL + Prisma ORM
+    Authentication: JWT
+    Hosting: Vercel (Frontend), Railway/Render (Backend)
+    Version Control: Git + GitHub
+    AI/ML: OpenAI Integration
+    
+# SITE
+    Last Update: 2026/01/11
+    Standards: HTML5, CSS3, ES2022+
+    Components: Semantic HTML, Accessible
+    Fonts: System Fonts + Google Fonts
+    Performance: Lazy Loading, Code Splitting
+    SEO: Optimized with Schema.org structured data
