@@ -35,15 +35,15 @@ const Login = () => {
         noindex={false}
       />
       <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#F8FAFC] via-white to-[#F8FAFC] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#0EA5E9]/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#0F172A]/10 rounded-full blur-3xl"></div>
-      </div>
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#0EA5E9]/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#0F172A]/10 rounded-full blur-3xl"></div>
+        </div>
 
-      <div className="w-full max-w-md relative z-10">
-        {/* Logo and Brand */}
-        <div className="text-center mb-8">
+        <div className="w-full max-w-md relative z-10">
+          {/* Logo and Brand */}
+          <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0F172A] to-[#1E293B] shadow-lg mb-4">
             <GraduationCap className="w-8 h-8 text-white" />
           </div>
@@ -173,6 +173,7 @@ const Login = () => {
           By signing in, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
+    </div>
     </>
   );
 };

@@ -31,9 +31,9 @@ const DemoPage = () => {
         keywords="student sathi demo, studentsathi demo, LMS demo, student engagement demo, education platform demo, free LMS trial"
       />
       <div className="min-h-screen bg-gradient-to-br from-[#F8FAFC] via-white to-[#F8FAFC]">
-      <div className="relative z-10">
-        {/* Header */}
-        <motion.div 
+        <div className="relative z-10">
+          {/* Header */}
+          <motion.div 
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="bg-white/80 backdrop-blur-xl border-b border-[#94A3B8] sticky top-0 z-50 shadow-sm"
@@ -232,6 +232,7 @@ const DemoPage = () => {
           </motion.div>
         </div>
       </div>
+    </div>
     </>
   );
 };

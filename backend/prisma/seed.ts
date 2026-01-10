@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, AttendanceStatus, AlertType, AlertSeverity, TrendType } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -110,7 +110,6 @@ async function main() {
   }
 
   // 5. Create Attendance Records (last 30 days)
-  const attendanceStatuses = ['PRESENT', 'ABSENT', 'LATE', 'EXCUSED'];
   const today = new Date();
   
   for (const student of createdStudents) {
@@ -125,11 +124,11 @@ async function main() {
       const isHighAttendance = student.attendanceRate > 85;
       const randomValue = Math.random() * 100;
       
-      let status: string;
+      let status: AttendanceStatus;
       if (isHighAttendance) {
-        status = randomValue < 95 ? 'PRESENT' : randomValue < 98 ? 'LATE' : 'ABSENT';
+        status = randomValue < 95 ? AttendanceStatus.PRESENT : randomValue < 98 ? AttendanceStatus.LATE : AttendanceStatus.ABSENT;
       } else {
-        status = randomValue < 60 ? 'PRESENT' : randomValue < 75 ? 'LATE' : randomValue < 85 ? 'ABSENT' : 'EXCUSED';
+        status = randomValue < 60 ? AttendanceStatus.PRESENT : randomValue < 75 ? AttendanceStatus.LATE : randomValue < 85 ? AttendanceStatus.ABSENT : AttendanceStatus.EXCUSED;
       }
       
       await prisma.attendanceRecord.upsert({
@@ -143,8 +142,8 @@ async function main() {
         create: {
           studentId: student.id,
           date: date,
-          status: status as any,
-          notes: status === 'ABSENT' ? 'Unexcused absence' : undefined,
+          status: status,
+          notes: status === AttendanceStatus.ABSENT ? 'Unexcused absence' : undefined,
         },
       });
     }
@@ -216,14 +215,14 @@ async function main() {
         const value = Math.max(0, Math.min(100, baseValue + variance));
         
         const previousValue = baseValue + variance - 5;
-        const trend = value > previousValue ? 'UP' : value < previousValue ? 'DOWN' : 'STABLE';
+        const trend = value > previousValue ? TrendType.UP : value < previousValue ? TrendType.DOWN : TrendType.STABLE;
         
         await prisma.analytics.create({
           data: {
             studentId: student.id,
             metric,
             value: parseFloat(value.toFixed(2)),
-            trend: trend as any,
+            trend: trend,
             timestamp: date,
             metadata: {
               details: `${metric} tracking for ${student.name}`,
@@ -241,18 +240,18 @@ async function main() {
       student: createdStudents[1], // Maria Garcia - Low performer
       alerts: [
         {
-          type: 'ENGAGEMENT_DROP' as any,
-          severity: 'HIGH' as any,
+          type: AlertType.ENGAGEMENT_DROP,
+          severity: AlertSeverity.HIGH,
           message: 'Student engagement has dropped below 50%. Immediate intervention recommended.',
         },
         {
-          type: 'ATTENDANCE_LOW' as any,
-          severity: 'CRITICAL' as any,
+          type: AlertType.ATTENDANCE_LOW,
+          severity: AlertSeverity.CRITICAL,
           message: 'Attendance rate is 65%, below the minimum required 75%.',
         },
         {
-          type: 'GRADE_DROP' as any,
-          severity: 'HIGH' as any,
+          type: AlertType.GRADE_DROP,
+          severity: AlertSeverity.HIGH,
           message: 'Recent test scores show a significant decline in Mathematics.',
         },
       ],
@@ -261,13 +260,13 @@ async function main() {
       student: createdStudents[4], // Michael Brown - Low performer
       alerts: [
         {
-          type: 'ENGAGEMENT_DROP' as any,
-          severity: 'CRITICAL' as any,
+          type: AlertType.ENGAGEMENT_DROP,
+          severity: AlertSeverity.CRITICAL,
           message: 'Student shows very low engagement (38.5%). Urgent meeting required.',
         },
         {
-          type: 'ATTENDANCE_LOW' as any,
-          severity: 'CRITICAL' as any,
+          type: AlertType.ATTENDANCE_LOW,
+          severity: AlertSeverity.CRITICAL,
           message: 'Attendance rate at 58% - at risk of failing due to absences.',
         },
       ],
@@ -276,8 +275,8 @@ async function main() {
       student: createdStudents[2], // James Wilson - Medium performer
       alerts: [
         {
-          type: 'GRADE_DROP' as any,
-          severity: 'MEDIUM' as any,
+          type: AlertType.GRADE_DROP,
+          severity: AlertSeverity.MEDIUM,
           message: 'Recent Physics exam score dropped by 15 points.',
         },
       ],
